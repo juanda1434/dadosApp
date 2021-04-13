@@ -1,0 +1,18 @@
+
+# HTID:16547858: DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES BELOW
+php_value display_errors 1
+# DO NOT REMOVE OR MODIFY THIS LINE AND THE LINES ABOVE HTID:16547858:
+
+
+#bloquea directorios del proyecto
+Options ALL -Indexes
+#para poder utilizar rewriterule
+RewriteEngine on
+
+
+RewriteRule ^PUT/(\w+)$ index.php?put=put&&ubicacionput=$1
+RewriteRule ^POST/(\w+)$ index.php?post=post&ubicacionpost=$1
+
+RewriteRule ^GET/(\w+)/codigo=(\w+)$ index.php?get=get&ubicacionget=$1&codigo=$2
+RewriteRule ^GET/(\w+)$ index.php?get=get&ubicacionget=$1
+RewriteRule ^(\w+)$ index.php?ubicacion=$1
