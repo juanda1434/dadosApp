@@ -6,7 +6,7 @@ class VersusDAO {
 
     public function __construct() {
         require_once RAIZ . 'Model/Database/Database.php';
-        $this->conexion = Database::connect();
+        $this->conexion = (new Database())->connect();
     }
 
     function validarVersus(VersusDTO $versusDTO) {

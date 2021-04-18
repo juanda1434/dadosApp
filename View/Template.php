@@ -25,7 +25,8 @@ if (isset($_GET["put"]) && $_GET["put"]=="put" && isset($_GET["ubicacionput"])) 
     <button id="enviar">Enviar</button>-->
     
     <?php
-    include_once RAIZ . '/View/Modules/' . ControllerView::getView(isset($_GET["ubicacion"]) ? $_GET["ubicacion"] : "Inicio");
+    
+    include_once RAIZ . '/View/Modules/' . (new ControllerView())->getView(isset($_GET["ubicacion"]) ? $_GET["ubicacion"] : "Inicio");
     
     ?>
 

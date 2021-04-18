@@ -58,7 +58,7 @@ class ControllerGET {
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
 
         $estudianteDTO = new EstudianteDTO(null, null, null, null, new RegistroDTO(null, null, new PartidoDTO(null,$codigo , null, null, null, null, null, null, null, null), null),null);
-        $puntajes = Business::getPuntajesPrimeraRonda($estudianteDTO);
+        $puntajes = (new Business())->getPuntajesPrimeraRonda($estudianteDTO);
 
         return $puntajes;
     }
@@ -66,13 +66,13 @@ class ControllerGET {
     public function getCampoActual($codigo) {
         require_once RAIZ . '/Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
-        return Business::getCampoActual(new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null));
+        return (new Business())->getCampoActual(new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null));
     }
     
     public function getCampoEnfrentamiento($codigo) {
         require_once RAIZ . '/Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
-        return Business::getCampoEnfrentamiento(new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null));
+        return (new Business())->getCampoEnfrentamiento(new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null));
     }
 
     public function getGanadoresCuadro($codigo) {
@@ -85,12 +85,12 @@ class ControllerGET {
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
         require_once RAIZ . 'Model/DTO/EnfrentamientoDTO.php';
 
-        return Business::getCuadros(new EnfrentamientoDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null));
+        return (new Business())->getCuadros(new EnfrentamientoDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null));
     }
 
     public function getEstadoRegistro() {
 
-        return Business::getEstadoRegistro();
+        return (new Business())->getEstadoRegistro();
     }
     
     public function getPuntajes($codigo) {
@@ -100,7 +100,7 @@ class ControllerGET {
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
 
         $estudianteDTO = new EstudianteDTO(null, null, null, null, new RegistroDTO(null, null, new PartidoDTO(null,$codigo , null, null, null, null, null, null, null, null), null),null);
-        $puntajes = Business::getPuntajes($estudianteDTO);
+        $puntajes = (new Business())->getPuntajes($estudianteDTO);
         
         return $puntajes;
     }
@@ -110,7 +110,7 @@ class ControllerGET {
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
         
         $partidoDTO=new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
-       return  Business::getCampoVersus($partidoDTO);
+       return  (new Business())->getCampoVersus($partidoDTO);
     }
     
     public function getEstudianteVersus($codigo) {
@@ -118,7 +118,7 @@ class ControllerGET {
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
         
         $partidoDTO=new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
-        return Business::getEstudianteVersus($partidoDTO);
+        return (new Business())->getEstudianteVersus($partidoDTO);
     }
     
 }

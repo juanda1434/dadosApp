@@ -4,7 +4,7 @@ if (isset($_POST["punto"])) {
     require_once RAIZ . 'Controller/ControllerEdit.php';
     
     try{
-        if(ControllerEdit::enviarPuntoSede()){
+        if((new ControllerEdit())->enviarPuntoSede()){
         echo json_encode(["exito"=>true]);
     }else{
         echo json_encode(["exito"=>false]);

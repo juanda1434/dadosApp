@@ -8,7 +8,7 @@ class ControllerLogin {
         require_once RAIZ.'Model/DTO/EstudianteDTO.php';
         $estudianteDTO=new EstudianteDTO(null, null, $codigo, $contrasenia, null,null);
         
-        return Business::loginEstudiante($estudianteDTO);
+        return (new Business())->loginEstudiante($estudianteDTO);
         
     }
     

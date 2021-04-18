@@ -8,7 +8,7 @@ if (isset($_POST["operacion"]) && strlen($_POST["operacion"]) <= 11 && strlen($_
         $operacion = $operacionCorrecta[0];
         require_once RAIZ.'Controller/ControllerEdit.php';
         try {
-        $exito= ControllerEdit::responderEnfrentamiento($operacion,$_POST["numerouno"],$_POST["numerodos"],$_POST["numerotres"],$_POST["numerocuatro"],$_POST["codigo"]);
+        $exito= (new ControllerEdit())->responderEnfrentamiento($operacion,$_POST["numerouno"],$_POST["numerodos"],$_POST["numerotres"],$_POST["numerocuatro"],$_POST["codigo"]);
       if($exito){
           echo json_encode(["exito"=>true]);         
       }else{

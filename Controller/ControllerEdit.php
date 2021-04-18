@@ -6,14 +6,14 @@ class ControllerEdit {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/PreguntaDTO.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
-        return Business::cerrarPregunta(new PreguntaDTO(NULL, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, NULL, NULL, NULL, NULL, NULL, NULL));
+        return (new Business())->cerrarPregunta(new PreguntaDTO(NULL, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, NULL, NULL, NULL, NULL, NULL, NULL));
     }
 
     public function SaltarPregunta($codigo) {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
         require_once RAIZ . 'Model/DTO/PreguntaDTO.php';
-        return Business::saltarPregunta(new PreguntaDTO(NULL, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, NULL, NULL, NULL, NULL, NULL, NULL));
+        return (new Business())->saltarPregunta(new PreguntaDTO(NULL, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, NULL, NULL, NULL, NULL, NULL, NULL));
     }
 
     public function iniciarPartida($codigo) {
@@ -26,14 +26,14 @@ class ControllerEdit {
     public function segundaRonda($codigo) {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
-        return Business::segundaRonda(new PartidoDTO(null, $codigo, NULL, null, null, null, null, null, null, null));
+        return (new Business())->segundaRonda(new PartidoDTO(null, $codigo, NULL, null, null, null, null, null, null, null));
     }
 
     public function nuevaRonda($codigo) {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
 
-        return Business::nuevaRonda(new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null));
+        return (new Business())->nuevaRonda(new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null));
     }
 
     public function finalizarRonda($codigo) {
@@ -42,7 +42,7 @@ class ControllerEdit {
 
         $PartidoDTO = new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
 
-        return Business::finalizarRonda($PartidoDTO);
+        return (new Business())->finalizarRonda($PartidoDTO);
     }
     public function finalizarEnfrentamiento($codigo) {
         require_once RAIZ . 'Model/Business.php';
@@ -50,13 +50,13 @@ class ControllerEdit {
 
         $PartidoDTO = new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
 
-        return Business::finalizarEnfrentamiento($PartidoDTO);
+        return (new Business())->finalizarEnfrentamiento($PartidoDTO);
     }
 
     public function enviarPuntoSede() {
         require_once RAIZ . 'Model/Business.php';
 
-        return Business::enviarPuntoSede();
+        return (new Business())->enviarPuntoSede();
     }
 
     public function seleccionarVersus($idEnfrentamiento1, $idEnfrentamiento2, $codigo) {
@@ -65,14 +65,14 @@ class ControllerEdit {
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
         $e1 = new EnfrentamientoDTO($idEnfrentamiento1, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null);
         $e2 = new EnfrentamientoDTO($idEnfrentamiento2, null, null, null, null, null, null);
-        return Business::seleccionarVersus($e1, $e2);
+        return (new Business())->seleccionarVersus($e1, $e2);
     }
 
     public function enviarSigno($x, $y, $i, $tipo) {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/SignoDTO.php';
         
-       return  Business::enviarSigno(new SignoDTO($x, $y, $i, $tipo));
+       return  (new Business())->enviarSigno(new SignoDTO($x, $y, $i, $tipo));
     }
     
     public function responderEnfrentamiento($operacion, $numerouno, $numerodos, $numerostres, $numerocuatro,$codigo) {
@@ -88,7 +88,7 @@ class ControllerEdit {
     
     public function actualizarEstado() {
        require_once RAIZ . 'Model/Business.php'; 
-       return Business::actualizarEstado();
+       return (new Business())->actualizarEstado();
        
     }
 }

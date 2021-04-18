@@ -7,7 +7,7 @@ if (isset($_POST["operacion"]) && strlen($_POST["operacion"]) <= 11 && strlen($_
     if ($valido !== false && $valido == 1) {
         $operacion = $operacionCorrecta[0];
         require_once RAIZ.'Controller/ControllerRegistro.php';
-        $exito=ControllerRegistro::registrarRespuesta($operacion,$_POST["numerouno"],$_POST["numerodos"],$_POST["numerotres"],$_POST["numerocuatro"],$_POST["codigo"]);
+        $exito=(new ControllerRegistro())->registrarRespuesta($operacion,$_POST["numerouno"],$_POST["numerodos"],$_POST["numerotres"],$_POST["numerocuatro"],$_POST["codigo"]);
       if($exito["exito"]){
           echo json_encode($exito);         
       }else{

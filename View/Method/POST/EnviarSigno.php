@@ -4,7 +4,7 @@ if (isset($_POST["x"]) && isset($_POST["y"]) && isset($_POST["i"]) && isset($_PO
     
     require_once RAIZ.'Controller/ControllerEdit.php';
     try {
-         if (ControllerEdit::enviarSigno($_POST["x"],$_POST["y"],$_POST["i"],$_POST["tipo"])) {
+         if ((new ControllerEdit())->enviarSigno($_POST["x"],$_POST["y"],$_POST["i"],$_POST["tipo"])) {
         echo json_encode(["exito"=>true]);
     }else{
          echo json_encode(["exito"=>false]);

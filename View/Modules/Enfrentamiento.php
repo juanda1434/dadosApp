@@ -4,7 +4,7 @@ if (!isset($_SESSION["infoEstudiante"])) {
     header("Location: Inicio");
 }else{
     require_once RAIZ . 'Controller/ControllerGET.php'; 
-    if(!ControllerGET::validarHash()){
+    if(!(new ControllerGET())->validarHash()){
         header("Location: Logout");
     }
 }

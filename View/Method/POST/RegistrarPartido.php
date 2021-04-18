@@ -4,7 +4,7 @@ if (isset($_POST["sede"]) && isset($_POST["grado"]) && isset($_POST["numero"])) 
     require_once RAIZ."Controller/ControllerRegistro.php";
     
     try {
-         if(ControllerRegistro::registrarPartido($_POST["sede"],$_POST["grado"],$_POST["numero"])){
+         if((new ControllerRegistro())->registrarPartido($_POST["sede"],$_POST["grado"],$_POST["numero"])){
         echo json_encode(array("exito"=>true));
         
     }else{

@@ -5,7 +5,7 @@ if (isset($_POST["estudiante1"]) && isset($_POST["estudiante2"]) && isset($_POST
     require_once RAIZ.'Controller/ControllerEdit.php';        
     
     try {
-         if (ControllerEdit::seleccionarVersus($_POST["estudiante1"],$_POST["estudiante2"],$_POST["codigo"])) {
+         if ((new ControllerEdit())->seleccionarVersus($_POST["estudiante1"],$_POST["estudiante2"],$_POST["codigo"])) {
         echo json_encode(["exito"=>true]);
     }else{
          echo json_encode(["exito"=>false]);

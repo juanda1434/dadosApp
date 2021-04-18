@@ -11,7 +11,7 @@ class ControllerDelete {
         require_once RAIZ.'Model/DTO/SedeDTO.php';
         require_once RAIZ.'Model/DTO/GradoDTO.php';
         $partidoDTO=new PartidoDTO(null, $codigo, null, null, new SedeDTO(null, null),new GradoDTO(null, null), null, null, null,null);
-        return Business::borrarPartido($partidoDTO);
+        return (new Business())->borrarPartido($partidoDTO);
         
         
     }

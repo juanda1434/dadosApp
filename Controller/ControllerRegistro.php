@@ -14,7 +14,7 @@ class ControllerRegistro {
         $date = getdate(time() - (6 * 60 * 60));
         $codigo = rand(10, 99) . $date["minutes"] . $date["seconds"];
         $partidoDTO = new PartidoDTO(null, $codigo, null, null, new SedeDTO($sede, null), new GradoDTO($grado, null), $numero, null, null, null);
-        return Business::registrarPartido($partidoDTO);
+        return (new Business())->registrarPartido($partidoDTO);
     }
 
     public function unirsePartida($codigoPartido) {
@@ -24,7 +24,7 @@ class ControllerRegistro {
         require_once RAIZ . 'Model/DTO/RegistroDTO.php';
         $registroDTO = new RegistroDTO(null, null, new PartidoDTO(null, $codigoPartido, null, null, null, null, null, null, null, null), null);
 
-        return Business::unirsePartida($registroDTO);
+        return (new Business())->unirsePartida($registroDTO);
     }
 
     public function registrarRespuesta($operacion, $numerouno, $numerodos, $numerostres, $numerocuatro,$codigo) {
@@ -42,7 +42,7 @@ class ControllerRegistro {
         require_once RAIZ . 'Model/DTO/PreguntaDTO.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
         $preguntaDTO = new PreguntaDTO(null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, $numerouno, $numerodos, $numerostres, $numerocuatro, $respuesta);
-        return Business::registrarPregunta($preguntaDTO);
+        return (new Business())->registrarPregunta($preguntaDTO);
     }
     
      public function registrarPreguntaEnfrentamiento($numerouno, $numerodos, $numerostres, $numerocuatro, $respuesta,$codigo) {
@@ -50,7 +50,7 @@ class ControllerRegistro {
         require_once RAIZ . 'Model/DTO/PreguntaDTO.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
         $preguntaDTO = new PreguntaDTO(null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, $numerouno, $numerodos, $numerostres, $numerocuatro, $respuesta);
-        return Business::registrarPreguntaEnfrentamiento($preguntaDTO);
+        return (new Business())->registrarPreguntaEnfrentamiento($preguntaDTO);
     }
 
 }
