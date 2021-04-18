@@ -252,7 +252,7 @@
             <footer class="main-footer bg-navy">
                 <!-- To the right -->
                 <div class="float-right d-none d-sm-inline">
-                    Realizado por <a href="https://facebook.com/Devidsft">Devidsft</a>
+                    Familia y escuela unidas para avanzar
                 </div>
                 <!-- Default to the left -->
                 <strong><div class="d-none d-lg-inline">CalcuDados </div>  <a href="https://colsantosapostoles.edu.co/web/"> Institucion Educativa Colegio Santos Apostoles</a></strong>
