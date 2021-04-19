@@ -113,7 +113,7 @@ if (isset($_SESSION["loginEstudiante"])) {
 
                     
                         <div class="input-group mb-3">
-                            <input id="inputUsuarioLoginEstudiante" type="number" class="form-control" placeholder="codigo">
+                            <input id="inputUsuarioLoginEstudiante" type="text" class="form-control" placeholder="codigo">
                             <div class="input-group-append">
                                 <div class="input-group-text">
                                     <span class="fas fa-envelope"></span>
