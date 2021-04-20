@@ -99,11 +99,11 @@ function cuadro(codigo) {
 ${enfrentamientosOctavos}</ul></div>` : "";
             let backetFinal = `${octavosEnfre}
 <div class="tournament-bracket__round tournament-bracket__round--Cuartos">          
-      <h3 class="tournament-bracket__round-title">Semifinal</h3>
+      <h3 class="tournament-bracket__round-title">Cuartos</h3>
       <ul class="tournament-bracket__list pl-0">
 ${enfrentamientosCuartos}</ul></div>
 <div class="tournament-bracket__round tournament-bracket__round--Semifinal">          
-      <h3 class="tournament-bracket__round-title">Cuartos</h3>
+      <h3 class="tournament-bracket__round-title">Semifinal</h3>
       <ul class="tournament-bracket__list pl-0">
 ${enfrentamientosSemifinal}</ul></div>
 <div class="tournament-bracket__round tournament-bracket__round--Final">          
