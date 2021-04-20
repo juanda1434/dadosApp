@@ -24,13 +24,13 @@ class SedeDAO {
 
         $sedes = [];
         try {
-            $stmGetSedes = $this->conexion->prepare("select idsede,nombre,puntaje from sede");
+            $stmGetSedes = $this->conexion->prepare("select idsede,nombre,puntaje,puntajeminimo from sede");
             if ($stmGetSedes->execute() && $stmGetSedes->rowCount() > 0) {
                 $sedesSQL = $stmGetSedes->fetchAll();
                 
 
                 foreach ($sedesSQL as $sede) {
-                    $sedes[] = ["id" => $sede["idsede"], "sede" => $sede["nombre"],"puntaje"=>$sede["puntaje"]];
+                    $sedes[] = ["id" => $sede["idsede"], "sede" => $sede["nombre"],"puntaje"=>$sede["puntaje"],"puntajeminimo"=>$sede["puntajeminimo"]];
                 }
             }
         } catch (Exception $ex) {
@@ -73,7 +73,20 @@ $id=$estudianteDTO->getIdEstudiante();
         }
         return $puntaje;
     }
-  
+  public function getPuntajeMinimo(SedeDTO $sedeDTO) {
+        $sede = $sedeDTO->getNombre();
+        $puntaje = -1;
+        try {
+            $stmGetSedes = $this->conexion->prepare("select puntajeminimo from sede where nombre=:nombre");
+            $stmGetSedes->bindParam(":nombre", $sede, PDO::PARAM_STR);
+            if ($stmGetSedes->execute() && $stmGetSedes->rowCount() > 0) {
+                $puntaje = intval($stmGetSedes->fetch()["puntajeminimo"]);
+            }
+        } catch (Exception $ex) {
+            
+        }
+        return $puntaje;
+    }
 
     public function enviarPunto(SedeDTO $sedeDTO) {
         $idEstudiante = $sedeDTO->getEstudiantesDTO()->getIdEstudiante();

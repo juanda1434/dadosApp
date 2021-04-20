@@ -57,7 +57,7 @@ if (!isset($_SESSION["loginEstudiante"])) {
         <div class="wrapper ">
             <nav class="main-header navbar navbar-expand-md navbar-dark ">
                 <div class="container">
-                    <a href="../../index3.html" class="navbar-brand">
+                    <a href="Inicio" class="navbar-brand">
                         <img src="View/Public/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle  elevation-3"
                              >
                         <span class="brand-text font-weight-light">Colegio Santos Apostoles</span>
@@ -82,7 +82,7 @@ if (!isset($_SESSION["loginEstudiante"])) {
 
                 </div>
             </nav>
-            <div class="content-wrapper row justify-content-center " style="margin-left: 0px">              
+            <div class="content-wrapper row justify-content-center " style="margin-right:0px">              
           
               
                 
@@ -96,7 +96,8 @@ if (!isset($_SESSION["loginEstudiante"])) {
                 
                 
                 <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
-                    <div class="col-12 row  justify-content-center">
+                    <h2  >Meta :<span id="lblPuntajeFinal">Cargando...</span></h2>
+                    <div class="col-12 row  justify-content-center" style="min-height: 350px">
                         <div class="col-12 row align-content-center" >
                             <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="alt"/>
                 </div>

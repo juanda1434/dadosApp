@@ -22,8 +22,10 @@ $(() => {
         let id=readGet.n;
         let sede=readGet.s;
         let puntaje=readGet.p;
+        let puntajeMaximo=readGet.pm;
         $("#imgCastillo").prop("src",`View/Public/img/castillo${id}.png`);
         $("#lblPuntajeInicio").html(puntaje);
+        $("#lblPuntajeFinal").html(puntajeMaximo);
         $("#lblSedeInicio").html("Castillo "+sede);
         $("#lblPuntajeInicio-sm").html(puntaje);
         $("#lblSedeInicio-sm").html("Castillo "+sede);

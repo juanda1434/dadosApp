@@ -52,7 +52,7 @@ if (isset($_SESSION["loginEstudiante"])) {
         <div class="wrapper ">
             <nav class="main-header navbar navbar-expand-md navbar-dark ">
                 <div class="container">
-                    <a href="../../index3.html" class="navbar-brand">
+                    <a href="#" class="navbar-brand">
                         <img src="View/Public/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle  elevation-3"
                              >
                         <span class="brand-text font-weight-light">Colegio Santos Apostoles</span>
@@ -77,7 +77,7 @@ if (isset($_SESSION["loginEstudiante"])) {
 
                 </div>
             </nav>
-            <div class="content-wrapper row justify-content-center " style="margin-left: 0px">
+            <div class="content-wrapper row justify-content-center " style="margin-right:0px">
                 
           
               
@@ -92,17 +92,18 @@ if (isset($_SESSION["loginEstudiante"])) {
                 
                 
                 <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
-                    <div class="col-12 row  justify-content-center">
+                    <h2  >Meta :<span id="lblPuntajeFinal">Cargando...</span></h2>
+                    <div class="col-12 row  justify-content-center" style="min-height: 350px">
                         <div class="col-12 row align-content-center" >
-                            <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="alt"/>
+                            <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="alt" />
                 </div>
-                        <div class="col-12 col-lg-8 align-self-center text-center d-none d-md-block" style="background-color:rgba(28,86,84,0.45);position: absolute ;">
+                        
+                        
+                        <div class="col-12 col-lg-8 align-self-center text-center d-none d-lg-block" style="background-color:rgba(28,86,84,0.45);position: absolute ;">
                             <h1 class=" text-white" style="border-bottom: 1px solid rgba(255,255,255,0.5)" id="lblSedeInicio">Cargando ...</h1>
-                            <h2 class=" text-white" ">Puntos: <small id="lblPuntajeInicio">Cargando ...</small></h2>
-
-                    
+                            <h2 class=" text-white" ">Puntos: <small id="lblPuntajeInicio">Cargando ...</small></h2>                    
                     </div>
-                        <div class="col-12 col-lg-8 align-self-start text-center d-md-none" style="background-color:rgba(28,86,84,0.45);position: absolute ;">
+                        <div class="col-12 col-lg-8 align-self-start text-center d-lg-none" style="background-color:rgba(28,86,84,0.45);position: absolute ;">
                             <h2 class=" text-white" style="border-bottom: 1px solid rgba(255,255,255,0.5)" id="lblSedeInicio-sm">Cargando ...</h2>
 <h5 class=" text-white" ">Puntos: <small id="lblPuntajeInicio-sm">Cargando ...</small></h5>
 

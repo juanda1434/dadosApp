@@ -24,8 +24,9 @@ $(() => {
                     let sede = r.estadoRegistro["sede"];
                     let idSede = r.estadoRegistro["idsede"];
                     let puntaje = r.estadoRegistro["puntajeSede"];
+                    let puntajeminimo=r.estadoRegistro["puntajeMinimo"]
                     let estado = "";
-                    if (Object.keys(r.estadoRegistro).length > 4) {
+                    if (Object.keys(r.estadoRegistro).length > 5) {
                         estado = r.estadoRegistro["estado"];
                         let grado = r.estadoRegistro["grado"];
                         let codigo = r.estadoRegistro["codigo"];
@@ -72,6 +73,7 @@ $(() => {
                         $("#lblPuntajeInicio").html(puntaje);
                         $("#lblSedeInicio-sm").html("Castillo " + sede);
                         $("#lblPuntajeInicio-sm").html(puntaje);
+                        $("#lblPuntajeFinal").html(puntajeminimo);
                         
     $("#imgCastillo").prop("src",`View/Public/img/castillo${idSede}.png`);
                         estadoActualizar=estado;

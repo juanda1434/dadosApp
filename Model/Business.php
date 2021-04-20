@@ -422,6 +422,7 @@ class Business {
             $estadoRegistro["sede"] = ($_SESSION["infoEstudiante"])["sede"];
             $estadoRegistro["idsede"] = ($_SESSION["infoEstudiante"])["idSede"];
             $estadoRegistro["puntajeSede"] = (new SedeDAO())->getPuntaje(new SedeDTO(null, $estadoRegistro["sede"]));
+            $estadoRegistro["puntajeMinimo"] = (new SedeDAO())->getPuntajeMinimo(new SedeDTO(null, $estadoRegistro["sede"]));
             if (isset($estadoRegistro["estado"]) && $estadoRegistro["estado"] == "Siguiente") {
                 require_once RAIZ . 'Model/DAO/EnfrentamientoDAO.php';
                 require_once RAIZ . 'Model/DTO/EnfrentamientoDTO.php';

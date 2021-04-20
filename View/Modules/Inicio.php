@@ -53,7 +53,7 @@ if (isset($_SESSION["loginEstudiante"])) {
             
             <nav class="main-header navbar navbar-expand-md navbar-dark ">
                 <div class="container">
-                    <a href="../../index3.html" class="navbar-brand">
+                    <a href="Inicio" class="navbar-brand">
                         <img src="View/Public/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle  elevation-3"
                              >
                         <span class="brand-text font-weight-light">Colegio Santos Apostoles</span>
@@ -79,41 +79,19 @@ if (isset($_SESSION["loginEstudiante"])) {
                 </div>
             </nav>
             
-            <div class="content-wrapper row justify-content-center " style="margin-left: 0px">              
+            <div class="content-wrapper row justify-content-center " style="margin-right: 0px">
+                              
           
               
-                
                     <div class="row align-self-center col-12">
 
             <div class="align-self-center row justify-content-center col-12" id="panelCastillos">
-                
-<div class="login-box col-10 col-md-6 col-lg-3 ">
-            <div  class="card mb-0 shadow-none"  style="background-color: rgba(22,22,22,0);">
-                
-                
-                <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
-                    <div class="col-12 row  justify-content-center">
-                        <div class="col-12 row align-content-center" >
-                     <img src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="alt"/>
-                </div>
-                        <div class="col-12 col-lg-10 align-self-end text-center " style="background-color:rgba(28,86,84,0.2);position: absolute ;">
-                            <h4 class=" text-white" style="border-bottom: 1px solid rgba(255,255,255,0.5)">Castillo Kennedy</h4>
-                            <h5 class=" text-white" ">Puntaje: 0</h5>
-                    </div>
-                    </div>
-                    
-                    </div>
-                </div>
-            </div>
-                
-                
-                
-             
-        </div>
+                <h1>Cargando castillos ...</h1>
                 
             </div>
+                
                    </div>
-               
+            </div>
                
 <footer class="main-footer bg-navy ml-0" >
                 <!-- To the right -->

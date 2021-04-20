@@ -46,7 +46,7 @@
         <div class="wrapper">
             <nav class="main-header navbar navbar-expand-md navbar-dark ">
                 <div class="container">
-                    <a href="../../index3.html" class="navbar-brand">
+                    <a href="Grupos" class="navbar-brand">
                         <img src="View/Public/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle  elevation-3"
                              >
                         <span class="brand-text font-weight-light">Colegio Santos Apostoles</span>
