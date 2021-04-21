@@ -18,7 +18,7 @@
         <link rel="stylesheet" href="View/Public/dist/css/adminlte.min.css">
         <!-- Google Font: Source Sans Pro -->
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-
+<link rel="stylesheet" href="View/Public/css/braket.css">
         <style>
 
 
@@ -46,7 +46,9 @@
             .list-group-item.activoo.win{
                 background-color: #c8e6c9;
             }
-
+            .tournament-bracket__match.activo{
+                background-color: #c8e6c9;
+            }
         </style>
     </head>
     <body class="hold-transition layout-top-nav" >
@@ -137,6 +139,23 @@
                                 <!-- /.login-card-body -->
                             </div>
                         </div>
+                        
+                        <div id="panelCuadro" class="card row col-12 justify-content-center mt-lg-5" style="background-color: #f4f9f9;">
+                            <div class="row col-12">
+                                <div class="containerB col-12">
+                                    <h1>Cuadro Torneo</h1>
+                                    <h2>Enfrentamientos</h2>
+                                    <div id="panelEnfrentamientos" class="tournament-bracket tournament-bracket--rounded justify-content-center">
+                                        <h2 class="text-center">No existe un cuadro generado</h2>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                        
+                        
                     </div> 
 
                 </div>
@@ -167,8 +186,9 @@
         <script src="View/Public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- AdminLTE App -->
         <script src="View/Public/dist/js/adminlte.min.js"></script>
-
+        <script src="View/Public/js/CuadrosEstudiante.js"></script>
         <script>
+            
             var readGet = function () {
                 var query_string = {};
                 var query = window.location.search.substring(1);
@@ -188,6 +208,7 @@
             }();
             $(() => {
                 let codigo = readGet.codigo;
+                cuadro(codigo);
                 $.post("GET/PuntajesGrupo/codigo=" + codigo, (r) => {
                     console.log(r);
                     
@@ -224,5 +245,6 @@
 
 interval;
         </script>
+        
     </body>
 </html>

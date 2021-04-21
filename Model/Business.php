@@ -407,6 +407,14 @@ class Business {
         require_once RAIZ . 'Model/DAO/EnfrentamientoDAO.php';
         return (new EnfrentamientoDAO())->getCuadros($enfrentamientoDTO);
     }
+    public function getCuadrosEstudiante($enfrentamientoDTO) {
+        session_start();
+        if(isset($_SESSION["infoEstudiante"])){        
+        require_once RAIZ . 'Model/DAO/EnfrentamientoDAO.php';
+        return ["id"=>($_SESSION["infoEstudiante"])["id"],"cuadro"=>(new EnfrentamientoDAO())->getCuadros($enfrentamientoDTO)];        
+        }
+        return [];
+    }
 
     public function getEstadoRegistro() {
         $estadoRegistro = [];

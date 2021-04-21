@@ -27,7 +27,7 @@ class EstudianteDAO {
 
         try {
             $stmLogin = $this->conexion->prepare("select estudiante.idestudiante,estudiante.nombre,sede.nombre sede,sede.idsede from estudiante INNER JOIN sede ON sede.idsede=estudiante.idsede where estudiante.usuario=:usuario and estudiante.contrasenia=:contrasenia");
-            $stmLogin->bindParam(":usuario", $usuario, PDO::PARAM_INT);
+            $stmLogin->bindParam(":usuario", $usuario, PDO::PARAM_STR);
             $stmLogin->bindParam(":contrasenia", $contrasenia, PDO::PARAM_STR);
             if ($stmLogin->execute() && $stmLogin->rowCount() > 0) {
                 $exito = $stmLogin->fetch();

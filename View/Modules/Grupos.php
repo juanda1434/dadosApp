@@ -252,7 +252,7 @@
                     let btns = "";
                     switch (estado) {
                         case "Jugando":
-                            btns = `<a class="btn btn-primary btn-sm" href="Prueba2?codigo=${codigo}"> <i class="fas fa-play"> </i> Abrir </a>
+                            btns = `<a class="btn btn-primary btn-sm" href="RondaUnoDocente?codigo=${codigo}"> <i class="fas fa-play"> </i> Abrir </a>
                                     <a class="btn btn-primary btn-sm" href="PuntajeGrupo?codigo=${codigo}"><i class="fas fa-play"></i> Puntuacion </a>`;
                             onAbrir(key, codigo);
                             break;
@@ -394,10 +394,19 @@
                 cargarRegistro();
                 cargarGrupos();
                 $("#btnCrearPartida").on("click", (r) => {
-                    
+                    r.preventDefault();
                         let sede = $("select[id=selectSedes]").val();
                         let grado = $("select[id=selectGrados]").val();
                         let numero = $("#inputNumero").val();
+                        if(numero.length<=0){
+                             $(document).Toasts('create', {
+                                    class: 'bg-danger',
+                                    title: 'Informativo !',
+                                    body: "Debes ingresar el numero del grupo"
+                                });
+                                return;
+                        }
+                            
                         $.post("POST/RegistrarPartido", {sede: sede, grado: grado, numero: numero}, (r) => {
                             console.log(r);
                             if (r.exito != undefined && r.exito) {

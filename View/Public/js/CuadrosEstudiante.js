@@ -1,7 +1,6 @@
 
-var cuadrosE;
-function generarEnfrentamientos(semifinal, name) {
-    (cuadrosE[name]) = [];
+function generarEnfrentamientos(semifinal, id) {
+    console.log(id);
     console.log(semifinal)
     let enfrentamientosSemifinal = "";
     let k = 0;
@@ -10,6 +9,7 @@ function generarEnfrentamientos(semifinal, name) {
 
             let uno = semifinal[i];
             k += uno != null ? 1 : 0;
+          
             let b1 = `<tr class="tournament-bracket__team tournament-bracket__team--winner">
                   <td class="tournament-bracket__country">
                     <abbr class="tournament-bracket__code" data-toggle="tooltip" data-placement="top" title="${uno != null ? uno.nombre : ""}">${uno != null ? uno.nombre : "NN"}</abbr>
@@ -20,6 +20,7 @@ function generarEnfrentamientos(semifinal, name) {
                   </td>
                 </tr>`
             let dos = semifinal[i + 1];
+           
             let b2 = `<tr class="tournament-bracket__team">
                   <td class="tournament-bracket__country">
                     <abbr class="tournament-bracket__code" data-toggle="tooltip" data-placement="top" title="${dos != null ? dos.nombre : ""}">${dos != null ? dos.nombre : "NN"}</abbr>
@@ -29,17 +30,13 @@ function generarEnfrentamientos(semifinal, name) {
                     <span class="tournament-bracket__number">${dos != null ? dos.puntaje : 0}</span>
                   </td>
                 </tr>`;
-            let funcion = "";
-            if (uno != null && dos != null) {
-                funcion = `btn${name}${j}`;
-                (cuadrosE[name])[cuadrosE[name].length] = {"btn": funcion, "idUno": uno.id, "idDos": dos.id, "n": j};
-            }
-
-            enfrentamientosSemifinal += `<li class="tournament-bracket__item" >
-          <div class="tournament-bracket__match" tabindex="0" id="${funcion}">
+             
+             const mio=(uno!=null && uno.idestudiante==id) || (dos!=null && dos.idestudiante==id) ? "activo":"";
+             enfrentamientosSemifinal += `<li class="tournament-bracket__item" >
+          <div class="tournament-bracket__match ${mio}" tabindex="0" >
             <table class="tournament-bracket__table">
               <caption class="tournament-bracket__caption">
-                <time >Enfrentamiento # ${j}</time>
+                <time style="color:#000000">Enfrentamiento # ${j}</time>
               </caption>
               <thead class="sr-only">
                 <tr>
@@ -64,8 +61,14 @@ function generarEnfrentamientos(semifinal, name) {
 }
 
 function cuadro(codigo) {
-    $.get(`GET/Cuadros/codigo=${codigo}`, (r) => {
-        
+    
+    $.get(`GET/CuadrosEstudiante/codigo=${codigo}`, (re) => {
+       if(Object.keys(re).length==0){
+           return;
+       }
+       
+        const r = re["cuadro"]!=undefined ?re.cuadro :{};
+        // console.log(r);
         if (r != undefined && Object.keys(r).length > 0) {
             let octavos = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
             let cuartos = [null, null, null, null, null, null, null, null];
@@ -89,11 +92,10 @@ function cuadro(codigo) {
                         break;
                 }
             }
-            cuadrosE = [];
-            let enfrentamientosOctavos = generarEnfrentamientos(octavos, "octavos");
-            let enfrentamientosCuartos = generarEnfrentamientos(cuartos, "cuartos");
-            let enfrentamientosSemifinal = generarEnfrentamientos(semifinal, "semifinal");
-            let enfrentamientosFinal = generarEnfrentamientos(final, "final");
+            let enfrentamientosOctavos = generarEnfrentamientos(octavos, re.id);
+            let enfrentamientosCuartos = generarEnfrentamientos(cuartos, re.id);
+            let enfrentamientosSemifinal = generarEnfrentamientos(semifinal, re.id);
+            let enfrentamientosFinal = generarEnfrentamientos(final, re.id);
             let octavosEnfre = enfrentamientosOctavos != "" ? `<div class="tournament-bracket__round tournament-bracket__round--Octavos">          
       <h3 class="tournament-bracket__round-title">Octavos</h3>
       <ul class="tournament-bracket__list pl-0">
@@ -115,37 +117,7 @@ ${enfrentamientosFinal}</ul></div>`;
 
             $("#panelEnfrentamientos").html(backetFinal);
             $('[data-toggle="tooltip"]').tooltip();
-            for (let key in cuadrosE) {
-                let cuadro = cuadrosE[key];
-                if (cuadro.length > 0) {
-                    for (let key2 in cuadro) {
-                        let cuadroo = cuadro[key2];
-                        $("#panelEnfrentamientos").off("click", `#${cuadroo["btn"]}`);
-                        $("#panelEnfrentamientos").on("click", `#${cuadroo["btn"]}`, (e) => {
-                            console.log("aux");
-                            $.post("POST/SeleccionarEnfrentamiento", {estudiante1: cuadroo["idUno"], estudiante2: cuadroo["idDos"], codigo: readGet.codigo}, (r) => {
-                                console.log(r);
-                                if (r.exito != undefined && r.exito) {
-//                                    rondaSeleccionada["tipo"] = key;
-//                                    rondaSeleccionada["n"] = cuadroo.n;
-                                     $(document).Toasts('create', {
-                                        class: 'bg-info',
-                                        title: 'Informativo !',
-                                        body: 'Has seleccionado un enfrentamiento.<br>Puedes iniciar el 1 v 1.'
-                                    });
-                                } else if (r.error != undefined) {
-                                    $(document).Toasts('create', {
-                                        class: 'bg-danger',
-                                        title: 'Informativo !',
-                                        body: r.error
-                                    });
-                                }
-
-                            },"json");
-                        });
-                    }
-                }
-            }
+           
         }
 
     }, "json");

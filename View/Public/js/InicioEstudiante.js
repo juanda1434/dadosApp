@@ -50,7 +50,7 @@ $(() => {
                             </div>` : `<div class="col-12 col-md-4 mb-2 mt-1">
                                <a id="btnAbrirPartido" href="#" role="button" class="disabled btn btn-dark btn-block text-center"><i class="fas fa-play fa-lg "></i> <b class="ml-2"> Jugar </b></a>
                             </div><div class="col-12 col-md-4 mb-2 ">
-                               <a href="#" role="button" class="disabled btn btn-dark btn-block text-center"><i class="fas fa-play fa-lg "></i> <b class="ml-2">Puntuacion</b></a>
+                               <a href="PuntajeGrupo?codigo=${codigo}" role="button" class=" btn btn-dark btn-block text-center"><i class="fas fa-play fa-lg "></i> <b class="ml-2">Puntuacion</b></a>
                             </div>`;
                         let informacion = estado == "Jugando" ? `Puedes jugar entra a la partida.` : estado == "Pausa" ? `Puedes revisar tu puntuacion !` : ``;
                         panel = `

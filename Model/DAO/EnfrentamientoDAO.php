@@ -24,12 +24,12 @@ class EnfrentamientoDAO {
         $cuadros = [];
         $codigo = $enfrentamientoDTO->getPartidoDTO()->getCodigo();
         try {
-            $stmGetCuadros = $this->conexion->prepare("select enfrentamiento.idenfrentamiento,enfrentamiento.ronda,enfrentamiento.numero,estudiante.nombre,enfrentamiento.puntaje from enfrentamiento INNER JOIN registro on registro.idregistro=enfrentamiento.idregistro INNER JOIN partido on partido.idpartido=registro.idpartido INNER JOIN estudiante ON estudiante.idestudiante=registro.idestudiante where partido.codigo=:codigo ORDER BY enfrentamiento.ronda ASC,enfrentamiento.numero ASC");
+            $stmGetCuadros = $this->conexion->prepare("select estudiante.idestudiante,enfrentamiento.idenfrentamiento,enfrentamiento.ronda,enfrentamiento.numero,estudiante.nombre,enfrentamiento.puntaje from enfrentamiento INNER JOIN registro on registro.idregistro=enfrentamiento.idregistro INNER JOIN partido on partido.idpartido=registro.idpartido INNER JOIN estudiante ON estudiante.idestudiante=registro.idestudiante where partido.codigo=:codigo ORDER BY enfrentamiento.ronda ASC,enfrentamiento.numero ASC");
             $stmGetCuadros->bindParam(":codigo", $codigo, PDO::PARAM_INT);
             if ($stmGetCuadros->execute() && $stmGetCuadros->rowCount() > 0) {
                 $enfrentamientos = $stmGetCuadros->fetchAll();
                 foreach ($enfrentamientos as $enfrentamiento) {
-                    $cuadros[] = ["id" => $enfrentamiento["idenfrentamiento"], "nombre" => $enfrentamiento["nombre"], "ronda" => intval($enfrentamiento["ronda"]), "numero" => intval($enfrentamiento["numero"]), "puntaje" => intval($enfrentamiento["puntaje"])];
+                    $cuadros[] = ["idestudiante"=>$enfrentamiento["idestudiante"],"id" => $enfrentamiento["idenfrentamiento"], "nombre" => $enfrentamiento["nombre"], "ronda" => intval($enfrentamiento["ronda"]), "numero" => intval($enfrentamiento["numero"]), "puntaje" => intval($enfrentamiento["puntaje"])];
                 }
             }
         } catch (Exception $ex) {
@@ -120,25 +120,25 @@ class EnfrentamientoDAO {
 
     function registrarRespuesta(EnfrentamientoDTO $enfrentamientoDTO, PreguntaDTO $preguntaDTO) {
         $idEnfrentamiento = $enfrentamientoDTO->getIdEnfrentamiento();
-        $idPregunta=$preguntaDTO->getIdPregunta();
+        $idPregunta = $preguntaDTO->getIdPregunta();
         $exito = false;
         try {
             $this->conexion->beginTransaction();
             $stmRespuesta = $this->conexion->prepare("update enfrentamiento set puntaje=puntaje+1 where idenfrentamiento=:idenfrentamiento");
             $stmRespuesta->bindParam(":idenfrentamiento", $idEnfrentamiento, PDO::PARAM_INT);
-            if (!$stmRespuesta->execute() || $stmRespuesta->rowCount() <=0) {
+            if (!$stmRespuesta->execute() || $stmRespuesta->rowCount() <= 0) {
                 throw new Exception("Error al enviar respuesta");
             }
             $stmEditarEstado = $this->conexion->prepare("UPDATE pregunta SET idestadopregunta = 2 WHERE idpregunta=:idpregunta ");
             $stmEditarEstado->bindParam(":idpregunta", $idPregunta, PDO::PARAM_INT);
-            if (!$stmEditarEstado->execute() || $stmEditarEstado->rowCount()<1) {
-                 throw new Exception("Error al enviar respuesta");
-            }
-            $sqlSetSigno= $this->conexion->prepare("UPDATE signo s SET s.x=s.xi,s.y=s.yi WHERE not s.x=s.xi OR not s.y=s.yi");
-            if (!$sqlSetSigno->execute() ) {
+            if (!$stmEditarEstado->execute() || $stmEditarEstado->rowCount() < 1) {
                 throw new Exception("Error al enviar respuesta");
             }
-            $exito= $this->conexion->commit();
+            $sqlSetSigno = $this->conexion->prepare("UPDATE signo s SET s.x=s.xi,s.y=s.yi WHERE not s.x=s.xi OR not s.y=s.yi");
+            if (!$sqlSetSigno->execute()) {
+                throw new Exception("Error al enviar respuesta");
+            }
+            $exito = $this->conexion->commit();
         } catch (Exception $ex) {
             $this->conexion->rollBack();
             throw new Exception($ex->getMessage());
@@ -146,20 +146,21 @@ class EnfrentamientoDAO {
         return $exito;
     }
 
-    
     public function validarActivo(EnfrentamientoDTO $enfrentamientoDTO) {
-        $idEstudiante=(($enfrentamientoDTO->getRegistroDTO())->getEstudianteDTO())->getIdEstudiante();
-        $exito=false;
+        $idEstudiante = (($enfrentamientoDTO->getRegistroDTO())->getEstudianteDTO())->getIdEstudiante();
+        $exito = false;
         try {
             $stmValidar = $this->conexion->prepare("select * from versus v INNER JOIN enfrentamiento en on en.idenfrentamiento=v.idenfrentamiento INNER JOIN registro r on r.idregistro=en.idregistro INNER JOIN estudiante e on e.idestudiante=r.idestudiante where  e.idestudiante=:idestudiante");
-           $stmValidar->bindParam(":idestudiante", $idEstudiante,PDO::PARAM_INT);
-            if ($stmValidar->execute() && $stmValidar->rowCount() >0) {
-                $exito=true;
+            $stmValidar->bindParam(":idestudiante", $idEstudiante, PDO::PARAM_INT);
+            if ($stmValidar->execute() && $stmValidar->rowCount() > 0) {
+                $exito = true;
             }
         } catch (Exception $ex) {
             
         }
         return $exito;
-        
     }
+
+    
+
 }

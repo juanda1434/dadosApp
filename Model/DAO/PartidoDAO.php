@@ -39,7 +39,7 @@ class PartidoDAO {
             $stmRegistrarPartido->bindParam(":numero", $numero,PDO::PARAM_INT);
             $exito = $stmRegistrarPartido->execute();
         } catch (Exception $ex) {
-            throw new Exception(stripos($ex->getMessage(), "grupo_UNIQUE")!==false ? "El grupo registrado para la sede grado y numero ingresados esta registrado.": "Error al registrar partido. Intenta de nuevo.");
+            throw new Exception(stripos($ex->getMessage(), "grupo_UNIQUE")!==false ? "El grupo ingresado para la sede, grado y numero seleccionados se encuentra registrado actualmente en el sistema.": "Error al registrar partido. Intenta de nuevo.");
         }
         return $exito;
     }

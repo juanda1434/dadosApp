@@ -88,6 +88,14 @@ class ControllerGET {
         return (new Business())->getCuadros(new EnfrentamientoDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null));
     }
 
+    public function getCuadrosEstudiante($codigo) {
+        require_once RAIZ . 'Model/Business.php';
+        require_once RAIZ . 'Model/DTO/PartidoDTO.php';
+        require_once RAIZ . 'Model/DTO/EnfrentamientoDTO.php';
+
+        return (new Business())->getCuadrosEstudiante(new EnfrentamientoDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null));
+    }
+    
     public function getEstadoRegistro() {
 
         return (new Business())->getEstadoRegistro();
