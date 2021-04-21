@@ -1,7 +1,6 @@
 $(() => {
 
     let estadoActualizar = "1";
-    
     function getRegistro() {
         $.get("GET/EstadoRegistro", (r) => {
             console.log(r)
@@ -47,6 +46,8 @@ $(() => {
                             </div>` :
                                 estado == "Siguiente" && r.estadoRegistro["activo"] != undefined ? `<div class="col-12 col-md-4 mb-2 mt-1">
                               <a id="btnAbrirPartido" href="Enfrentamiento?codigo=${codigo}" role="button" class="btn btn-dark btn-block text-center"><i class="fas fa-play fa-lg "></i> <b class="ml-2">Jugar</b></a>
+                            </div><div class="col-12 col-md-4 mb-2 ">
+                               <a href="PuntajeGrupo?codigo=${codigo}" role="button" class=" btn btn-dark btn-block text-center"><i class="fas fa-play fa-lg "></i> <b class="ml-2">Puntuacion</b></a>
                             </div>` : `<div class="col-12 col-md-4 mb-2 mt-1">
                                <a id="btnAbrirPartido" href="#" role="button" class="disabled btn btn-dark btn-block text-center"><i class="fas fa-play fa-lg "></i> <b class="ml-2"> Jugar </b></a>
                             </div><div class="col-12 col-md-4 mb-2 ">
@@ -61,6 +62,7 @@ $(() => {
                        
                                     </ul>
                                     `;
+                        estado+=r.estadoRegistro["activo"]!=null? r.estadoRegistro["activo"]:"false";
                     } else {
                         estado = "";
                         btn = `<div class="col-12 col-md-4 mb-2 mt-1">
