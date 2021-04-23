@@ -1,15 +1,27 @@
 <?php
-session_start();
-if (!isset($_SESSION["loginEstudiante"])) {
-    
-    header("Location: Inicio");
-}else{
-    require_once RAIZ . 'Controller/ControllerGET.php'; 
-    if(!(new ControllerGET())->validarHash()){
-        header("Location: Logout");
-    }
-}
-
+//session_start();
+//if (!isset($_SESSION["loginEstudiante"])) {
+//    
+//    header("Location: Inicio");
+//}else{
+//    require_once RAIZ . 'Controller/ControllerGET.php'; 
+//    if(!(new ControllerGET())->validarHash()){
+//        header("Location: Logout");
+//    }
+//}
+//        $asd=[["nombre"=>"Estudiante1","punto"=>"2","sede"=>"Chapinero"],["nombre"=>"ESTUDIANTE1","punto"=>"2","sede"=>"Chapinero"],["nombre"=>"ESTUDIANTE1","punto"=>"2","sede"=>"Chapinero"]];
+//        
+//        require_once RAIZ.'Model/Database/Database.php';
+//        
+//        $bd = new Database();
+//        
+//        $con=$bd->connect();
+//        
+//        $stm=$con->prepare("select e.nombre,COUNT(puntajesede.idpuntajesede)puntos,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede GROUP BY puntajesede.idestudiante");
+//        $stm->execute();
+//        $estus= $stm->fetchAll();
+//        echo json_encode($estus,JSON_UNESCAPED_UNICODE);
+//        return;
 ?>
 <!DOCTYPE html>
 <html>
@@ -110,7 +122,7 @@ if (!isset($_SESSION["loginEstudiante"])) {
                     <div class="row justify-content-center">
 
                         <div class=" row col-12 col-lg-6 justify-content-center mt-5">
-                            
+
                             <div class="login-box">
 
                                 <!-- /.login-logo -->
@@ -161,24 +173,24 @@ if (!isset($_SESSION["loginEstudiante"])) {
                         </div>
                         <div class="row col-12 col-lg-6 justify-content-center ">
                             <div class="login-box col-10 col-md-6 col-lg-6 ">
-            <div  class="card mb-0 shadow-none"  style="background-color: rgba(22,22,22,0);">
-                
-                
-                <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
-                    <div class="col-12 row  justify-content-center">
-                        <div class="col-12 row align-content-center" >
-                            <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="Cargando castillo..."/>
-                </div>
-                        <div class="col-12 col-lg-10 align-self-end text-center " style="background-color:rgba(28,86,84,0.45);position: absolute ;">
-                            <h4 class=" text-white" style="border-bottom: 1px solid rgba(255,255,255,0.5)"><b id="lblCastilloPractica">Castillo Cargando...</b></h4>
-                            <h5 class=" text-white" "><b id="lblPuntosPractica">Puntos: cargando...</b></h5>
-                    </div>
-                
-                    </div>
-                    
-                    </div>
-                </div>
-            </div>
+                                <div  class="card mb-0 shadow-none"  style="background-color: rgba(22,22,22,0);">
+
+
+                                    <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
+                                        <div class="col-12 row  justify-content-center">
+                                            <div class="col-12 row align-content-center" >
+                                                <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="Cargando castillo..."/>
+                                            </div>
+                                            <div class="col-12 col-lg-10 align-self-end text-center " style="background-color:rgba(28,86,84,0.45);position: absolute ;">
+                                                <h4 class=" text-white" style="border-bottom: 1px solid rgba(255,255,255,0.5)"><b id="lblCastilloPractica">Castillo Cargando...</b></h4>
+                                                <h5 class=" text-white" "><b id="lblPuntosPractica">Puntos: cargando...</b></h5>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                             <div class="login-box">
 
                                 <!-- /.login-logo -->
@@ -227,12 +239,16 @@ if (!isset($_SESSION["loginEstudiante"])) {
         <!-- jQuery -->
         <script src="View/Public/plugins/jquery/jquery.min.js"></script>
         <!-- Bootstrap 4 -->
+        
         <script src="View/Public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- AdminLTE App -->
         <script src="View/Public/dist/js/adminlte.min.js"></script>
         <script src="https://unpkg.com/konva@7.2.2/konva.min.js"></script>
-        <script>
-
+        
+     
+    <script>
+        
+           
             var estaJugando = false;
             var estaRuleta = false;
             var tablaNumeros = [];
@@ -240,36 +256,36 @@ if (!isset($_SESSION["loginEstudiante"])) {
             var signosArreglo = [];
             var numeroElegido = -1;
             $(() => {
-                let interval=setInterval(()=>{
-    $.post("POST/ActualizarEstado",{actualizar:true},(r)=>{
-        if (r.exito!=undefined && !r.exito) {
-            document.location = "Inicio"    
-}
-    },"json");
-},5000);
+                let interval = setInterval(() => {
+                    $.post("POST/ActualizarEstado", {actualizar: true}, (r) => {
+                        if (r.exito != undefined && !r.exito) {
+                            document.location = "Inicio"
+                        }
+                    }, "json");
+                }, 5000);
 
-interval;
-                
-                function enviarPuntoSede(){
-                    $.post("POST/PuntoSede",{punto:true},(r)=>{
-                                console.log(r); 
-                                actualizarCastillo();
+                interval;
+
+                function enviarPuntoSede() {
+                    $.post("POST/PuntoSede", {punto: true}, (r) => {
+                        console.log(r);
+                        actualizarCastillo();
                     });
                 }
-                
-                function actualizarCastillo(){
-                    $.get("GET/SedeEstudiante",(r)=>{
-                        if (r.sede!=undefined) {
+
+                function actualizarCastillo() {
+                    $.get("GET/SedeEstudiante", (r) => {
+                        if (r.sede != undefined) {
                             $("#lblCastilloPractica").html("Castillo " + r.sede["sede"])
-                            $("#lblPuntosPractica").html("Puntos "+r.sede["puntaje"]);
-                            $("#imgCastillo").prop("src",`View/Public/img/castillo${r.sede["id"]}.png`);
-                            
-                            
-            }
-                    },"json");
+                            $("#lblPuntosPractica").html("Puntos " + r.sede["puntaje"]);
+                            $("#imgCastillo").prop("src", `View/Public/img/castillo${r.sede["id"]}.png`);
+
+
+                        }
+                    }, "json");
                 }
                 actualizarCastillo();
-                
+
                 let llenarTabla = "";
                 for (let i = 0; i < 15; i++) {
                     tablaNumeros[i] = i + 1;
@@ -346,7 +362,7 @@ interval;
                                 title: 'Muy bien !',
                                 body: 'Sumaste 1 punto a tu sede, sigue jugando!'
                             });
-                            
+
                             enviarPuntoSede();
                             let activo = $(".activo");
                             activo.removeClass("activo");

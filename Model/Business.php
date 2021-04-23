@@ -19,6 +19,10 @@ class Business {
         return $value;
     }
 
+    public function getListaEstudiantesParticipantes() {
+        require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
+        return (new EstudianteDAO())->getListaEstudiantesParticipantes();
+    }
     public function enviarPuntoSede() {
         $exito = false;
         session_start();

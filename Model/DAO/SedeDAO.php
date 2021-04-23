@@ -107,7 +107,13 @@ $id=$estudianteDTO->getIdEstudiante();
             if (!$stmSumarPunto->execute() || $stmSumarPunto->rowCount() <= 0) {
                 throw new Exception("Error al sumar punto a la sede.");
             }
-
+            $stmActualizarPuntajeSede= $this->conexion->prepare("insert into puntajesede (idsede,idestudiante,fecharegistro) values(:idsede,:idestudiante,".TIEMPO.")");
+            $stmActualizarPuntajeSede->bindParam(":idestudiante", $idEstudiante,PDO::PARAM_INT);
+            $stmActualizarPuntajeSede->bindParam(":idsede", $idSede,PDO::PARAM_INT);
+            if(!$stmActualizarPuntajeSede->execute() || $stmActualizarPuntajeSede->rowCount() <=0){
+                throw new Exception("Error al sumar punto a la sede. No se pudo registrar puntaje en la sede");
+            }
+            
             $exito = $this->conexion->commit();
         } catch (Exception $ex) {
             $this->conexion->rollBack();

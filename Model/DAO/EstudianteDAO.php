@@ -37,10 +37,10 @@ class EstudianteDAO {
                 if (!$stmEstaConectado->execute() || $stmEstaConectado->rowCount() <= 0) {
                     throw new Exception("La cuenta esta siendo usada en este momento");
                 }
-                $hash=$estudianteDTO->getHash();
+                $hash = $estudianteDTO->getHash();
                 $stmSetHash = $this->conexion->prepare("update estudiante set hash=:hash where idestudiante=:idestudiante");
                 $stmSetHash->bindParam(":idestudiante", $idestudiante, PDO::PARAM_INT);
-                 $stmSetHash->bindParam(":hash", $hash, PDO::PARAM_STR);
+                $stmSetHash->bindParam(":hash", $hash, PDO::PARAM_STR);
                 if (!$stmSetHash->execute() || $stmSetHash->rowCount() <= 0) {
                     throw new Exception("Error interno. Intentalo de nuevo");
                 }
@@ -123,24 +123,24 @@ class EstudianteDAO {
 
     public function mantenerConexion(EstudianteDTO $estudianteDTO) {
         $idestudiante = $estudianteDTO->getIdEstudiante();
-        $hash=$estudianteDTO->getHash();
+        $hash = $estudianteDTO->getHash();
         $exito = false;
         try {
             $stmMantenerConexion = $this->conexion->prepare("update estudiante set logeado=" . TIEMPO . " where idestudiante=:idestudiante and hash=:hash");
             $stmMantenerConexion->bindParam(":idestudiante", $idestudiante, PDO::PARAM_INT);
-            $stmMantenerConexion->bindParam(":hash", $hash,PDO::PARAM_STR);
+            $stmMantenerConexion->bindParam(":hash", $hash, PDO::PARAM_STR);
             if ($stmMantenerConexion->execute() && $stmMantenerConexion->rowCount() > 0) {
                 $exito = true;
             }
         } catch (Exception $ex) {
-            json_encode(["exito"=>false,$ex->getMessage()]);
+            json_encode(["exito" => false, $ex->getMessage()]);
         }
         return $exito;
     }
 
-    public function esMiHash($hash,$idestudiante) {
+    public function esMiHash($hash, $idestudiante) {
         $exito = false;
-        $hash1=$hash;
+        $hash1 = $hash;
         try {
             $stmHash = $this->conexion->prepare("select idestudiante from estudiante where estudiante.idestudiante=:idestudiante and estudiante.hash=:hash");
             $stmHash->bindParam(":hash", $hash1, PDO::PARAM_STR);
@@ -152,6 +152,23 @@ class EstudianteDAO {
             
         }
         return $exito;
+    }
+
+    public function getListaEstudiantesParticipantes() {
+        $estos = [];
+        try {
+            $stm = $this->conexion->prepare("select e.nombre,COUNT(puntajesede.idpuntajesede)puntos,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede GROUP BY puntajesede.idestudiante");
+            if ($stm->execute() && $stm->rowCount() > 0) {
+                $estus = $stm->fetchAll();
+
+                foreach ($estus as $value) {
+                    $estos[] = ["nombre" => $value["nombre"], "puntos" => $value["puntos"], "sede" => $value["sede"]];
+                }
+            }
+        } catch (Exception $ex) {
+            
+        }
+        return $estos;
     }
 
 }

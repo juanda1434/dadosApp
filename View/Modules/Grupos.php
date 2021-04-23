@@ -132,9 +132,14 @@
                                             <input type="number" id="inputNumero" class="form-control">
                                         </div>
 
-                                        <div class="row col-12 col-lg-4">
+                                        <div class="row col-12 col-lg-3">
                                             <div class="col-12">
                                                 <a href="#" id="btnCrearPartida" class="btn btn-success "><li class="fas fa-save"> </li> Crear Nuevo Grupo</a>
+                                            </div>
+                                        </div>
+                                        <div class="row col-12 col-lg-3">
+                                            <div class="col-12">
+                                                <a href="#" id="btnGenerarExcel" class="btn btn-success "><li class="fas fa-save"> </li> Generar Excel</a>
                                             </div>
                                         </div>
                                     </div>
@@ -237,17 +242,37 @@
         <!-- AdminLTE App -->
         <script src="View/Public/dist/js/adminlte.min.js"></script>
 
-
+<script src="View/Public/js/filesaver.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
+    <script src="View/Public/js/json-excel.js"></script>  
         <script>
 
+var dataExcel = {};
+ const generarExcel = () => {
+                fetch('GET/MS')
+                        .then(r => {
 
-
+                            return r.json();
+                        }).then(d => {
+                            dataExcel=d;
+                    downloadAsExcel();
+                    
+                }).catch((e)=>{
+                    $(document).Toasts('create', {
+                                    class: 'bg-danger',
+                                    title: 'Error del sistema !',
+                                    body: "Error al generar el archivo excel."
+                                });
+                });
+            }
 
 
 
 
             $(() => {
 
+                document.getElementById("btnGenerarExcel").onclick= generarExcel;
+                  
                 function botones(estado, codigo, key) {
                     let btns = "";
                     switch (estado) {
