@@ -184,6 +184,6 @@ if (!isset($_SESSION["loginEstudiante"])) {
         <script src="View/Public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- AdminLTE App -->
         <script src="View/Public/dist/js/adminlte.min.js"></script>
- <script src="View/Public/js/InicioEstudiante.js"></script>
+ <script src="View/Public/js/InicioEstudiante.js?v=<?php echo filemtime(RAIZ . "View/Public/js/InicioEstudiante.js"); ?>"></script>
          </body>
 </html>

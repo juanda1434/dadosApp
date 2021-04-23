@@ -406,13 +406,13 @@ interval;
                                     $(document).Toasts('create', {
                                         class: 'bg-success',
                                         title: 'Genial !',
-                                        body: 'Respondiste correctamente, completa el cuadro !'
+                                        body: 'Respondiste correctamente, sumaste 1 punto !'
                                     });
                                 } else {
                                     $(document).Toasts('create', {
                                         class: 'bg-danger',
                                         title: 'Ups !',
-                                        body: 'Respondiste erroneamente, completa el cuadro !'
+                                        body: 'Respondiste erroneamente, no sumaste puntos en esta ronda !'
                                     });
                                 }
                                 reiniciartablero();

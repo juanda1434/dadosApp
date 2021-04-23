@@ -344,7 +344,7 @@ interval;
                             $(document).Toasts('create', {
                                 class: 'bg-success',
                                 title: 'Muy bien !',
-                                body: 'Sumaste 1 punto a tu sede, Sigue jugando!'
+                                body: 'Sumaste 1 punto a tu sede, sigue jugando!'
                             });
                             
                             enviarPuntoSede();
@@ -360,7 +360,7 @@ interval;
                             $(document).Toasts('create', {
                                 class: 'bg-danger',
                                 title: 'Ups !',
-                                body: 'Respondiste erroneamente, completa el cuadro !'
+                                body: 'Respondiste erroneamente, intentalo de nuevo!'
                             });
                             next();
                             $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
