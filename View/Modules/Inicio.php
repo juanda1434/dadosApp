@@ -112,6 +112,6 @@ if (isset($_SESSION["loginEstudiante"])) {
         <!-- AdminLTE App -->
         <script src="View/Public/dist/js/adminlte.min.js"></script>
 
-        <script type="module" src="View/Public/js/Castillos.js?v=<?php echo filemtime(RAIZ . "View/Public/js/MainJuego.js"); ?>"></script>
+        <script type="module" src="View/Public/js/Castillos.js?v=<?php echo filemtime(RAIZ . "View/Public/js/Castillos.js"); ?>"></script>
     </body>
 </html>

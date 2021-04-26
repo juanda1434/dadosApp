@@ -11,7 +11,7 @@ $(()=>{
                 
                 
                 <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
-                    <h2 >Meta : ${c.puntajeminimo}</h2>
+                    <h2 >Nº participantes : ${c.puntajeminimo}</h2>
                     <div class="col-12 row  justify-content-center" >
                         <div class="col-12 row align-content-center" >
                      <img src="View/Public/img/castillo${c.id}.png" class="img-fluid col-12" alt="alt"/>

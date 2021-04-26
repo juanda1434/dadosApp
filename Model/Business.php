@@ -23,7 +23,7 @@ class Business {
         require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
         return (new EstudianteDAO())->getListaEstudiantesParticipantes();
     }
-    public function enviarPuntoSede() {
+    public function enviarPuntoSede($correcto) {
         $exito = false;
         session_start();
         if (isset($_SESSION["infoEstudiante"])) {
@@ -32,7 +32,7 @@ class Business {
             require_once RAIZ . 'Model/DTO/EstudianteDTO.php';
             $sedeDto = new SedeDTO(null, null);
             $sedeDto->setEstudiantesDTO(new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null));
-            $exito = (new SedeDAO())->enviarPunto($sedeDto);
+            $exito = (new SedeDAO())->enviarPunto($sedeDto,$correcto);
         } else {
             throw new Exception("Debes estar logeado");
         }

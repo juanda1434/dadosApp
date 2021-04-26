@@ -157,12 +157,12 @@ class EstudianteDAO {
     public function getListaEstudiantesParticipantes() {
         $estos = [];
         try {
-            $stm = $this->conexion->prepare("select e.nombre,COUNT(puntajesede.idpuntajesede)puntos,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede GROUP BY puntajesede.idestudiante");
+            $stm = $this->conexion->prepare("select e.nombre,SUM(if(puntajesede.correcto,0,1)) incorrecto,SUM(if(puntajesede.correcto,1,0)) correcto,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede GROUP BY puntajesede.idestudiante ORDER by e.nombre");
             if ($stm->execute() && $stm->rowCount() > 0) {
                 $estus = $stm->fetchAll();
 
                 foreach ($estus as $value) {
-                    $estos[] = ["nombre" => $value["nombre"], "puntos" => $value["puntos"], "sede" => $value["sede"]];
+                    $estos[] = ["nombre" => $value["nombre"], "correctas" => $value["correcto"],"incorrectas" => $value["incorrecto"], "sede" => $value["sede"]];
                 }
             }
         } catch (Exception $ex) {

@@ -53,10 +53,10 @@ class ControllerEdit {
         return (new Business())->finalizarEnfrentamiento($PartidoDTO);
     }
 
-    public function enviarPuntoSede() {
+    public function enviarPuntoSede($correcto) {
         require_once RAIZ . 'Model/Business.php';
 
-        return (new Business())->enviarPuntoSede();
+        return (new Business())->enviarPuntoSede($correcto);
     }
 
     public function seleccionarVersus($idEnfrentamiento1, $idEnfrentamiento2, $codigo) {

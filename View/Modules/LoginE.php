@@ -92,7 +92,7 @@ if (isset($_SESSION["loginEstudiante"])) {
                 
                 
                 <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
-                    <h2  >Meta :<span id="lblPuntajeFinal">Cargando...</span></h2>
+                    <h2  >Nº participantes : <span id="lblPuntajeFinal">Cargando...</span></h2>
                     <div class="col-12 row  justify-content-center" style="min-height: 350px">
                         <div class="col-12 row align-content-center" >
                             <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="alt" />

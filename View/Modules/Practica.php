@@ -266,8 +266,8 @@
 
                 interval;
 
-                function enviarPuntoSede() {
-                    $.post("POST/PuntoSede", {punto: true}, (r) => {
+                function enviarPuntoSede(correcta) {
+                    $.post("POST/PuntoSede", {punto: correcta}, (r) => {
                         console.log(r);
                         actualizarCastillo();
                     });
@@ -363,7 +363,7 @@
                                 body: 'Sumaste 1 punto a tu sede, sigue jugando!'
                             });
 
-                            enviarPuntoSede();
+                            enviarPuntoSede(true);
                             let activo = $(".activo");
                             activo.removeClass("activo");
                             activo.addClass("inactivo");
@@ -378,6 +378,7 @@
                                 title: 'Ups !',
                                 body: 'Respondiste erroneamente, intentalo de nuevo!'
                             });
+                            enviarPuntoSede(false);
                             next();
                             $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
                         }
@@ -386,6 +387,7 @@
 
                 $("#btnSiguiente").on("click", () => {
                     next();
+                    enviarPuntoSede(false);
                     $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
                 });
                 function next() {
