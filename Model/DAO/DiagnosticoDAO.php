@@ -51,7 +51,7 @@ class DiagnosticoDAO {
     public function validarTiempoDiagnostico(DiagnosticoDTO $diagnosticoDTO): bool {
         $idEstudiante = ($diagnosticoDTO->getEstudianteDTO())->getIdEstudiante();
         try {
-            $stmValidar = $this->conexion->prepare("select * from diagnostico d INNER JOIN diagnosticopregunta dp on dp.iddiagnostico=d.iddiagnostico where dp.idpreguntabase=10 and dp.fechafin is null and CURRENT_TIMESTAMP < d.fechafin and d.idestudiante=:idestudiante");
+            $stmValidar = $this->conexion->prepare("select * from diagnostico d INNER JOIN diagnosticopregunta dp on dp.iddiagnostico=d.iddiagnostico where dp.idpreguntabase=10 and dp.fechafin is null and ".TIEMPO." < d.fechafin and d.idestudiante=:idestudiante");
             $stmValidar->bindParam(":idestudiante", $idEstudiante, PDO::PARAM_INT);
             if ($stmValidar->execute() && $stmValidar->rowCount() > 0) {
                 return true;
