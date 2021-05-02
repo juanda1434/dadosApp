@@ -319,6 +319,7 @@ if (!isset($_SESSION["infoEstudiante"])) {
                             });
                             actualizarCampo();
                             $("#btnEmpezarPrueba").prop("disabled", true);
+                            $("html,body").animate({scrollTop: $("#banderaTablero").offset().top}, 1000);
                         }
                     }, "json");
                 });
