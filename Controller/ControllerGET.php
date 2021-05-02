@@ -5,11 +5,16 @@ class ControllerGET {
     public function __construct() {
         
     }
+    public function validarDiagnostico() {
+        require_once RAIZ . '/Model/Business.php';
+        return (new Business())->validarEnDiagnostico();
+    }
 
     public function validarHash() {
-      require_once RAIZ . '/Model/Business.php';
-      return (new Business())->esMiHash();
+        require_once RAIZ . '/Model/Business.php';
+        return (new Business())->esMiHash();
     }
+
     public function getPartidos() {
         require_once RAIZ . '/Model/Business.php';
         return (new Business())->getPartidos();
@@ -24,10 +29,12 @@ class ControllerGET {
         require_once RAIZ . '/Model/Business.php';
         return (new Business())->getSedeEstudiante();
     }
-     public function getSedes() {
+
+    public function getSedes() {
         require_once RAIZ . '/Model/Business.php';
         return (new Business())->getSedes();
     }
+
     public function getPartidoActivo($codigo) {
 
         require_once RAIZ . '/Model/Business.php';
@@ -51,16 +58,22 @@ class ControllerGET {
             return array("exito" => false);
         }
     }
+
     public function getPuntajesPrimeraRonda($codigo) {
         require_once RAIZ . '/Model/Business.php';
         require_once RAIZ . '/Model/DTO/EstudianteDTO.php';
         require_once RAIZ . '/Model/DTO/RegistroDTO.php';
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
 
-        $estudianteDTO = new EstudianteDTO(null, null, null, null, new RegistroDTO(null, null, new PartidoDTO(null,$codigo , null, null, null, null, null, null, null, null), null),null);
+        $estudianteDTO = new EstudianteDTO(null, null, null, null, new RegistroDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null), null);
         $puntajes = (new Business())->getPuntajesPrimeraRonda($estudianteDTO);
 
         return $puntajes;
+    }
+
+    public function getCampoDiagnostico() {
+        require_once RAIZ . '/Model/Business.php';
+        return (new Business())->getCampoDiagnostico();
     }
 
     public function getCampoActual($codigo) {
@@ -68,7 +81,7 @@ class ControllerGET {
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
         return (new Business())->getCampoActual(new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null));
     }
-    
+
     public function getCampoEnfrentamiento($codigo) {
         require_once RAIZ . '/Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
@@ -95,44 +108,43 @@ class ControllerGET {
 
         return (new Business())->getCuadrosEstudiante(new EnfrentamientoDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null));
     }
-    
+
     public function getEstadoRegistro() {
 
         return (new Business())->getEstadoRegistro();
     }
-    
+
     public function getPuntajes($codigo) {
-         require_once RAIZ . '/Model/Business.php';
+        require_once RAIZ . '/Model/Business.php';
         require_once RAIZ . '/Model/DTO/EstudianteDTO.php';
         require_once RAIZ . '/Model/DTO/RegistroDTO.php';
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
 
-        $estudianteDTO = new EstudianteDTO(null, null, null, null, new RegistroDTO(null, null, new PartidoDTO(null,$codigo , null, null, null, null, null, null, null, null), null),null);
+        $estudianteDTO = new EstudianteDTO(null, null, null, null, new RegistroDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null), null);
         $puntajes = (new Business())->getPuntajes($estudianteDTO);
-        
+
         return $puntajes;
     }
 
     public function getCampoVersus($codigo) {
         require_once RAIZ . '/Model/Business.php';
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
-        
-        $partidoDTO=new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
-       return  (new Business())->getCampoVersus($partidoDTO);
+
+        $partidoDTO = new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
+        return (new Business())->getCampoVersus($partidoDTO);
     }
-    
+
     public function getEstudianteVersus($codigo) {
-         require_once RAIZ . '/Model/Business.php';
+        require_once RAIZ . '/Model/Business.php';
         require_once RAIZ . '/Model/DTO/PartidoDTO.php';
-        
-        $partidoDTO=new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
+
+        $partidoDTO = new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null);
         return (new Business())->getEstudianteVersus($partidoDTO);
     }
-    
-    
+
     public function getListaEstudiantesParticipantes() {
         require_once RAIZ . '/Model/Business.php';
         return (new Business())->getListaEstudiantesParticipantes();
-        
     }
+
 }

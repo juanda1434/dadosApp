@@ -2,13 +2,13 @@
 session_start();
 if (!isset($_SESSION["infoEstudiante"])) {
     header("Location: Inicio");
-}else{
-    require_once RAIZ . 'Controller/ControllerGET.php'; 
-    if(!(new ControllerGET())->validarHash()){
+} else {
+    require_once RAIZ . 'Controller/ControllerGET.php';
+    if (!(new ControllerGET())->validarHash()) {
         header("Location: Logout");
     } else
-    if ((new ControllerGET())->validarDiagnostico()) {
-        header("Location: Diagnostico");
+    if (!(new ControllerGET())->validarDiagnostico()) {
+        header("Location: Inicio");
     }
 }
 ?>
@@ -87,7 +87,7 @@ if (!isset($_SESSION["infoEstudiante"])) {
         <div class="wrapper">
             <nav class="main-header navbar navbar-expand-md navbar-dark ">
                 <div class="container">
-                    <a href="Enfrentamiento" class="navbar-brand">
+                    <a href="Diagnostico" class="navbar-brand">
                         <img src="View/Public/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle  elevation-3"
                              >
                         <span class="brand-text font-weight-light">Colegio Santos Apostoles</span>
@@ -118,14 +118,39 @@ if (!isset($_SESSION["infoEstudiante"])) {
 
                 <div class="container ">
                     <div class="row justify-content-center">
+                        <div class="row col-12  justify-content-center mt-lg-5">
+                            <div class="">
+
+                                <!-- /.login-logo -->
+                                <div id="banderaTabla" class="card">
+                                    <div class="card-header text-center">
+                                        <h3 >Antes de <b>iniciar el juego</b> debes presentar la siguiente <b>prueba diagnostica</b>.
+                                            <br><br>Realiza la prueba <b>sin ayuda de tus padres</b> para al final medir tus avances.
+                                            <br><br>Recuerda que esta prueba <b>no tiene calificacion</b>.</h3>
+
+                                    </div>
+                                    <div  class="card-body  pt-0 pb-0 pl-1 pr-2">       
+
+                                        <div class="row p-4 justify-content-center" >
+                                            <button type="button" class="btn btn-primary" disabled="" id="btnEmpezarPrueba">Empezar prueba diagnostica</button>
+
+                                        </div>
+
+
+                                    </div>
+                                    <!-- /.login-card-body -->
+                                </div>
+                            </div>
+                        </div>
 
                         <div class=" row col-12 col-lg-6 justify-content-center mt-5">
                             <div class="login-box">
 
                                 <!-- /.login-logo -->
                                 <div id="banderaTablero" class="card ">
-                                    <div class="card-header text-center " >
-                                        <h2 id="lblNumeroRonda" >Calcu<b>Dados</b></h2>
+                                    <div class="card-header text-center ">
+                                        <h2>Calcu<b>Dados</b></h2>
+                                        <h3 id="numeroPregunta"></h3>
 
                                     </div>
                                     <div  class="card-body login-card-body p-0 ">       
@@ -146,7 +171,7 @@ if (!isset($_SESSION["infoEstudiante"])) {
                                         <div class="row justify-content-center">
 
                                             <div class="col-6">
-                                                <button id="btnResponder" type="button" class="btn btn-info btn-flat btn-block disabled"><i class="fas fa-paper-plane "></i> Responder</button>
+                                                <button id="btnResponder" type="button" class="btn btn-info btn-flat btn-block" disabled=""><i class="fas fa-paper-plane "></i> Responder</button>
                                             </div>
 
                                         </div>
@@ -181,114 +206,28 @@ if (!isset($_SESSION["infoEstudiante"])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="login-box col-12 col-lg-6" id="tablapuntuacionesd">
 
-                            <!-- /.login-logo -->
-                            <div class="card ">
-                                <div class="card-header text-center ">
-                                    <h2><b>Puntuacion</b> </h2>
-
-                                </div>
-                                <div  class="card-body login-card-body">       
-
-                                    <div class="row">
-                                        <div class="col-12 p-0 " >
-                                            <div class="col-12">
-                                                <ul id="listPuntajes" class="list-group list-group-unbordered mb-3">
-
-
-
-                                                </ul>
-                                            </div>
-
-
-
-                                        </div>
-
-                                        <!-- /.col -->
-
-                                        <!-- /.col -->
-                                    </div>
-
-
-
-                                </div>
-
-                                <!-- /.login-card-body -->
-                            </div>
-                        </div>
                     </div> 
 
                 </div>
 
-<div class="modal fade" id="modal-success">
-        <div class="modal-dialog">
-          <div class="modal-content bg-success">
-            <div class="modal-header">
-                <h4 class="modal-title align-content-center">Ganaste la ronda - <span id="lblTituloGanar"></span> </h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <p id="lblYo"></p>
-            </div>
-            
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-                <div class="modal fade" id="modal-danger">
-        <div class="modal-dialog">
-          <div class="modal-content bg-danger">
-            <div class="modal-header">
-                <h4 class="modal-title align-content-center">Perdiste la ronda - <span id="lblTituloPerder"></span></h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <p id="lblEnemigo"></p>
-            </div>
-            
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-                <div class="modal fade" id="final-danger">
-        <div class="modal-dialog">
-          <div class="modal-content bg-danger">
-            <div class="modal-header">
-                <h4 class="modal-title align-content-center">Has sido eliminado</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <p id="lblEliminado"></p>
-            </div>
-            
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
                 <div class="modal fade" id="final-success">
-        <div class="modal-dialog">
-          <div class="modal-content bg-success">
-            <div class="modal-header">
-                <h4 class="modal-title align-content-center">Ganaste el enfrentamiento</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
-            </div>
-            <div class="modal-body">
-                <p >Espera a tu profesora.</p>
-            </div>
-            
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
+                    <div class="modal-dialog">
+                        <div class="modal-content bg-success">
+                            <div class="modal-header">
+                                <h4 class="modal-title align-content-center">Has finalizado la prueba diagnostica</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Muchas gracias por participar en la prueba diagnostica.<br>Ya puedes iniciar la primera fase y sumar puntos para tu sede.</p>
+                            </div>
+
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
             </div>
 
 
@@ -319,25 +258,6 @@ if (!isset($_SESSION["infoEstudiante"])) {
 
         <script src="View/Public/plugins/moment/moment-timezone-with-data.js"></script>
         <script>
-            var readGet = function () {
-                var query_string = {};
-                var query = window.location.search.substring(1);
-                var vars = query.split("&");
-                for (var i = 0; i < vars.length; i++) {
-                    var pair = vars[i].split("=");
-                    if (typeof query_string[pair[0]] === "undefined") {
-                        query_string[pair[0]] = decodeURIComponent(pair[1]);
-                    } else if (typeof query_string[pair[0]] === "string") {
-                        var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
-                        query_string[pair[0]] = arr;
-                    } else {
-                        query_string[pair[0]].push(decodeURIComponent(pair[1]));
-                    }
-                }
-                return query_string;
-            }();
-
-
 
             var estaJugando = true;
             var estaRuleta = false;
@@ -356,16 +276,16 @@ if (!isset($_SESSION["infoEstudiante"])) {
             var imgDados = [];
             var imgLetra = [];
             $(() => {
-                 let interval=setInterval(()=>{
-    $.post("POST/ActualizarEstado",{actualizar:true},(r)=>{
-        
-        if (r.exito!=undefined && !r.exito) {
-            document.location = "Inicio";    
-}
-    });
-},5000);
+                let interval = setInterval(() => {
+                    $.post("POST/ActualizarEstado", {actualizar: true}, (r) => {
 
-interval;
+                        if (r.exito != undefined && !r.exito) {
+                            document.location = "Inicio";
+                        }
+                    });
+                }, 5000);
+
+                interval;
                 var serverDate;
                 var serverOffset;
                 $.get("GET/Time", function (data) {
@@ -389,60 +309,19 @@ interval;
                 }
                 $("#container-numeros").html(llenarTabla);
 
-
-                function activarTabla() {
-
-
-                    setTimeout(() => {
-
-                        if (estaJugando && estaRuleta) {
-                            contador += 250;
-                            tiempo += contador == 1000 ? -1 : 0;
-                            contador = contador == 1000 ? 0 : contador;
-                            let num = Math.floor((Math.random() * tablaNumeros.length - 1) + 2);
-                            let num2 = tablaNumeros[num - 1];
-                            if (!$(`#${num2}cuadrado`).hasClass("inactivo")) {
-                                $(".activo").removeClass("activo");
-                                $(`#${num2}cuadrado`).addClass("activo");
-                                let texto = tiempo > 0 ? `Esperando para empezar...` : `Debes llegar a : <b id="numeroLlegar">${numeroElegido}</b>`;
-                                $("#numeroLlegar").html(texto);
-                            }
-
-                            //numeroElegido = num - 1;
-                            /////////////////////////
-                            try {
-                                for (let i = 0; i < numeros.length; i++) {
-                                    let d = Math.floor((Math.random() * 5) + 1);
-//                                    let imageletra = new Image();
-//                                    let imageDado = new Image();
-                                    // numeros[i].letra.letra = d;
-                                    numeros[i].letra.image(imgLetra[d]);
-//                                    imageletra.src = `View/Public/img/${d}letra.png`;
-                                    numeros[i].dado.image(imgDados[d]);
-//                                    imageDado.src = `View/Public/img/${d}.png`;
-                                    layer.batchDraw();
-
-                                }
-                            } catch (error) {
-
-                            }
-
-
-
-                            if (tiempo <= 0) {
-                                llegoNumero();
-                                tiempo = 60 * 2;
-                                pausarRuleta();
-                                $("html,body").animate({scrollTop: $("#banderaTablero").offset().top}, 1000);
-                            }
-
-                            activarTabla();
-
+                $("#btnEmpezarPrueba").on("click", (e) => {
+                    $.post("POST/IniciarDiagnostico", (r) => {
+                        if (r.exito != undefined && r.exito) {
+                            $(document).Toasts('create', {
+                                class: 'bg-success',
+                                title: 'Genial !',
+                                body: 'Acabas de iniciar tu prueba diagnostica. Tienes 20 minutos para hacerla.'
+                            });
+                            actualizarCampo();
+                            $("#btnEmpezarPrueba").prop("disabled", true);
                         }
-
-
-                    }, 350);
-                }
+                    }, "json");
+                });
 
 
                 function llegoNumero() {
@@ -463,64 +342,33 @@ interval;
 
                         $(".activo").removeClass("activo");
                         $(`#${numeroElegido}cuadrado`).addClass("activo");
-
+                        $("#numeroLlegar").html(`Debes llegar a : <b id="numeroLlegar">${numeroElegido}</b>`);
                     }
                 }
 
                 $("#btnResponder").on("click", () => {
                     if (!estaRuleta) {
-                        $.post("POST/ResponderEnfrentamiento", getOperacion(), (r) => {
-                            console.log(r);                           
-                                if (r.exito!=undefined && r.exito) {
-                                    
-                                } else if(r.error!=undefined) {
-                                    $(document).Toasts('create', {
-                                        class: 'bg-danger',
-                                        title: 'Ups !',
-                                        body: r.error
-                                    });
-                                }else{
-                                    $(document).Toasts('create', {
-                                        class: 'bg-danger',
-                                        title: 'Ups !',
-                                        body: 'Respondiste erroneamente. Intentalo de nuevo!'
-                                    });
-                                }
+                        $.post("POST/RespuestaDiagnostico", getOperacion(), (r) => {
+                            console.log(r);
+                            if (r.error != undefined) {
+                                $(document).Toasts('create', {
+                                    class: 'bg-danger',
+                                    title: 'Ups !',
+                                    body: r.error
+                                });
+                            } else if (r.exito != undefined) {
+                                $(document).Toasts('create', {
+                                    class: 'bg-success',
+                                    title: 'Genial !',
+                                    body: 'Enviaste una respuesta, responde la siguiente!'
+                                });
+                                reiniciartablero();
+                                actualizarCampo();
 
-                            
-                        },"json");
+                            }
+                        }, "json");
                     }
 
-
-
-
-
-//                    if (estaJugando && !estaRuleta) {
-//                        let resultado = validarOperacion();
-//                        if (resultado == tablaNumeros[numeroElegido]) {
-//                            $(document).Toasts('create', {
-//                                class: 'bg-success',
-//                                title: 'Genial !',
-//                                body: 'Respondiste correctamente, completa el cuadro !'
-//                            });
-//                            let activo = $(".activo");
-//                            activo.removeClass("activo");
-//                            activo.addClass("inactivo");
-//                            tablaNumeros.splice(numeroElegido, 1)
-//                            numeroElegido = -1;
-//
-//                            next();
-//                            $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
-//                        } else {
-//                            $(document).Toasts('create', {
-//                                class: 'bg-danger',
-//                                title: 'Ups !',
-//                                body: 'Respondiste erroneamente, completa el cuadro !'
-//                            });
-//                            next();
-//                            $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
-//                        }
-//                    }
                 });
 
 
@@ -533,6 +381,7 @@ interval;
 
                     }
                 }
+
                 function reiniciartablero() {
                     for (let i = 0; i < numeros.length; i++) {
                         numeros[i].letra.draggable(false);
@@ -547,6 +396,7 @@ interval;
                     layer.batchDraw();
                     layer.batchDraw();
                 }
+
                 function pausarRuleta() {
                     estaRuleta = false;
                     for (let i = 0; i < numeros.length; i++) {
@@ -587,173 +437,58 @@ interval;
                     return fechaFin !== null ? fechaFin.unix() - now().unix() : 0;
                 }
                 let cantidadResueltas = 0;
-                let miPuntaje=-1;
-                let enemigoPuntaje=-1;
-                let tieneActualizar=0;
-                let primerLLegada=0;
                 function actualizarCampo() {
-                    $.get("GET/CampoEnfrentamiento/codigo=" + readGet.codigo, (r) => {
-                        
+
+                    $.get("GET/CampoDiagnostico", (r) => {
                         console.log(r);
                         if (r.opcion != undefined) {
                             switch (r.opcion) {
-                                case 1:
-                                    if (estaRuleta) {
-                                        numerosSeleccionadosProfe = [r.pregunta.dadouno, r.pregunta.dadodos, r.pregunta.dadotres, r.pregunta.dadocuatro];
-                                        numeroElegido = r.pregunta.numero;
-                                        tiempo = 0;
-                                        fechaFin = moment(r.pregunta.fechados, "YYYY-MM-DD hh:mm:ss");
-                                        if (cronometroInterval == null) {
-                                            cronometroInterval = setInterval(() => {
-                                                if (pasarSegundo()+2 <= 0) {
-                                                    $(document).Toasts('create', {
-                                                        class: 'bg-danger',
-                                                        title: 'Ups',
-                                                        body: 'Se acabo el tiempo para responder.'
-                                                    });
-                                                    clearInterval(cronometroInterval);
-                                                    cronometroInterval = null;
-                                                } else {
-                                                    $("#numeroLlegar").html(`Debes llegar a : <b id="numeroLlegar">${numeroElegido}</b><br><span><b>Tiempo Restante : ${pasarSegundo()+2}</b></span>`)
-                                                }
-                                            }, 500)
-                                        }
-
-
-                                    } else if (cronometroInterval == null) {
-                                        estaRuleta = true;
-                                        numerosSeleccionadosProfe = [r.pregunta.dadouno, r.pregunta.dadodos, r.pregunta.dadotres, r.pregunta.dadocuatro];
-                                        numeroElegido = r.pregunta.numero;
-                                        tiempo = 10;
-                                        activarTabla();
-
-
-                                    }
+                                case 4:
+                                    document.location = "Diagnostico";
+                                    break;
+                                case 3:
+                                    $('#final-success').modal({
+                                        keyboard: false
+                                    });
                                     setTimeout(() => {
-                                        actualizarCampo();
-                                    }, 2000);
+                                        document.location = "Inicio";
+                                    }, 4000)
 
+                                    break;
+                                case 1:
+                                    document.location = "Inicio";
                                     break;
                                 case 2:
-                                    if (!estaRuleta) {
-                                        if (cronometroInterval != null) {
-                                        
-                                            
-                                            clearInterval(cronometroInterval);
-                                            cronometroInterval = null;
-                                            
-                                        }
-                                        next();
-                                        estaRuleta = true;
-                                        activarTabla();
+                                    $("#btnEmpezarPrueba").prop("disabled", false);
+
+                                    break;
+                                case 5:
+                                    numerosSeleccionadosProfe = [r.pregunta.dadouno, r.pregunta.dadodos, r.pregunta.dadotres, r.pregunta.dadocuatro];
+                                    numeroElegido = r.pregunta.numero;
+                                    $("#numeroPregunta").html(`<b>Pregunta #${r.pregunta.numeroPregunta}</b>`)
+                                    llegoNumero();
+                                    pausarRuleta();
+                                    $("#btnResponder").prop("disabled", false);
+                                    if (cronometroInterval == null) {
+                                        fechaFin = moment(r.pregunta.fechafin, "YYYY-MM-DD hh:mm:ss");
+                                        cronometroInterval = setInterval(() => {
+                                            if (pasarSegundo() + 2 <= 0) {
+                                                $('#final-success').modal({
+                                                    keyboard: false
+                                                });
+                                                setTimeout(() => {
+                                                    document.location = "Inicio";
+                                                }, 4000)
+                                                clearInterval(cronometroInterval);
+                                                cronometroInterval = null;
+                                            } else {
+                                                $("#numeroLlegar").html(`Debes llegar a : <b id="numeroLlegar">${numeroElegido}</b><br><span><b>Tiempo Restante : ${pasarSegundo() + 2}</b></span>`)
+                                            }
+                                        }, 500)
                                     }
-                                    setTimeout(() => {
-                                        actualizarCampo();
-                                    }, 2000);
-
-                                    break;
-
-                                case 4:
-                                if (miPuntaje>enemigoPuntaje) {
-                                $('#final-success').modal({
-  keyboard: false
-});
-//                                     $(document).Toasts('create', {
-//                                        class: 'bg-success',
-//                                        title: 'Muy bien !',
-//                                        body: 'Ganaste el enfrentamiento!'
-//                                    });
-    
-}else{
-  $("#lblEliminado").html($("#enemigo").html() + " es el ganador del enfrentamiento.");
-$('#final-danger').modal({
-  keyboard: false
-});
-//    $(document).Toasts('create', {
-//                                                class: 'bg-danger',
-//                                                title: 'Ten en cuenta!',
-//                                                body: 'Has sido eliminado, Intentalo en otra ocasion'
-//                                            });
-}
-setTimeout(()=>{
-    
-        document.location="Inicio";
-   
-},6000);
                                     break;
                             }
-                            if (r.resueltas != undefined && Object.keys(r.resueltas).length > 0 && Object.keys(r.resueltas).length != cantidadResueltas) {
-                                for (var key in r.resueltas) {
-                                    let resuelta = r.resueltas[key];
-                                    $(`#${resuelta}cuadrado`).addClass("inactivo");
 
-                                }
-                                cantidadResueltas = Object.keys(r.resueltas).length;
-                            }
-                            if (r.puntuacion != undefined) {
-                            let cantidadNiños = 0;
-                            let listPuntajes="";
-                            for (var key in r.puntuacion["tabla"]) {
-                                let tabla=(r.puntuacion["tabla"])[key];
-                                let yo = tabla.ide==r.puntuacion["id"]?"activoo win":"";
-                                let yoId = tabla.ide==r.puntuacion["id"]?"yo":"enemigo";
-                                if (tabla.ide==r.puntuacion["id"]) {
-                                    if (miPuntaje!=parseInt(tabla.puntaje)) {
-                               if (tieneActualizar>1) {
-                                   
-$("#lblTituloGanar").html("Pasando a ronda #"+(miPuntaje+enemigoPuntaje+2));
-                                   $('#modal-success').modal({
-  keyboard: false
-});
-$("#lblYo").html($("#yo").html() + " sumo 1 punto");
-                                    miPuntaje=parseInt(tabla.puntaje); 
-//                                         $(document).Toasts('create', {
-//                                        class: 'bg-success',
-//                                        title: 'Muy bien !',
-//                                        body: 'Ganaste la ronda! Sumaste 1 punto'
-//                                    });
-    
-}else if(primerLLegada>0){    
-    miPuntaje=parseInt(tabla.puntaje); 
-    tieneActualizar++;
-}
-                                       
-}
-                                    
-}else{
-    if (enemigoPuntaje!=parseInt(tabla.puntaje)) {
-        if (tieneActualizar>1) {
-            
-$("#lblTituloPerder").html("Pasando a ronda #"+(miPuntaje+enemigoPuntaje+2));
-            $('#modal-danger').modal({
-  keyboard: false
-});
-$("#lblEnemigo").html($("#enemigo").html()+" sumo 1 punto");
-//             $(document).Toasts('create', {
-//                                                class: 'bg-danger',
-//                                                title: 'Ten en cuenta!',
-//                                                body: 'Perdiste la ronda. '
-//                                            });
-                                              enemigoPuntaje=parseInt(tabla.puntaje)
-        }else if(primerLLegada>0){
-              enemigoPuntaje=parseInt(tabla.puntaje)
-              tieneActualizar++;
-        }
-      
-       
-    
-}
-    
-}
-                                cantidadNiños++;
-                                listPuntajes += `<li class="list-group-item ${yo}">
-                                                          <span id="${yoId}"> ${tabla.nombre}</span> <a class="float-right pr-1">${tabla.puntaje}</a>
-                                                        </li>`;
-                            }
-                           $("#lblNumeroRonda").html("Ronda <b>#" + (miPuntaje+enemigoPuntaje+1)+"</b>" )
-                             $("#listPuntajes").html(listPuntajes);
-                             primerLLegada=1;
-                            }
                         }
 
                     }, "json");
@@ -906,11 +641,6 @@ $("#lblEnemigo").html($("#enemigo").html()+" sumo 1 punto");
                         signo2.x(xinicial)
                         signo2.y(260)
                     }
-                    let nn=(numeros[i]).letra;
-                    console.log(nn.x()+" "+ nn.y());
-                         $.post("POST/EnviarSigno",{x:nn.x(),y:nn.y(),i:i,tipo:0},(r)=>{
-                             console.log(r);
-                         });
                 });
                 layer.add(signo2);
                 layer.batchDraw();
@@ -927,96 +657,91 @@ $("#lblEnemigo").html($("#enemigo").html()+" sumo 1 punto");
                 signo.onload = () => {
                 };
                 signo.src = `View/Public/img/${nombre}.png`;
-                
-                    let signo2 = new Konva.Image({
-                        x: posicion,
-                        y: 320,
-                        image: signo,
-                        width: wIni,
-                        height: hIni, draggable: false, name: nombre
-                    });
-                    signo2.wIni = wIni;
-                    signo2.hIni = hIni;
-                    signo2.xIni = posicion;
-                    signo2.yIni = 320;
-                    signo2.nombre=nombre;
-                    let len=signosArreglo.length;
-                    signosArreglo[signosArreglo.length] = signo2;
-                    signo2.on('dragend', function () {
-                        let nameSigno = signo2.name();
-                        switch (nameSigno) {
-                            case "parentesisderecho":
-                                if (CuadroSignoDerecho != null) {
-                                    signo2.x(CuadroSignoDerecho.x() - 20);
-                                    signo2.y(CuadroSignoDerecho.y() - 10);
-                                    signo2.height(hIni + 13);
-                                    CuadroSignoDerecho.fill("white");
-                                    for (let key in arregloCuadrados) {
-                                        if (arregloCuadrados[key] === CuadroSignoDerecho) {
-                                            seleccionados[key] = {cuadrado: CuadroSignoDerecho, signo: signo2, caracter: ")"};
-                                            break;
-                                        }
-                                    }
-                                    CuadroSignoDerecho = null;
-                                } else {
-                                    signo2.x(posicion);
-                                    signo2.y(320);
-                                    signo2.width(wIni);
-                                    signo2.height(hIni);
-                                }
-                                break;
-                            case"parentesisizquierdo":
-                                if (CuadroSignoIzquierdo != null) {
-                                    signo2.x(CuadroSignoIzquierdo.x() - 14);
-                                    signo2.y(CuadroSignoIzquierdo.y() - 10);
-                                    signo2.height(hIni + 13);
-                                    CuadroSignoIzquierdo.fill("white");
-                                    for (let key in arregloCuadrados) {
-                                        if (arregloCuadrados[key] === CuadroSignoIzquierdo) {
-                                            seleccionados[key] = {cuadrado: CuadroSignoIzquierdo, signo: signo2, caracter: "("};
-                                            break;
-                                        }
-                                    }
-                                    CuadroSignoIzquierdo = null;
-                                } else {
-                                    signo2.x(posicion);
-                                    signo2.y(320);
-                                    signo2.width(wIni);
-                                    signo2.height(hIni);
-                                }
-                                break;
-                            default:
-                                if (cuadroSigno != null) {
-                                    signo2.x(cuadroSigno.x());
-                                    signo2.y(cuadroSigno.y());
-                                    signo2.width(cuadroSigno.width());
-                                    signo2.height(cuadroSigno.height());
 
-                                    for (let key in arregloCuadrados) {
-                                        if (arregloCuadrados[key] === cuadroSigno) {
-
-                                            seleccionados[key] = {cuadrado: cuadroSigno, signo: signo2, caracter: convertirCaracter(nameSigno)};
-                                            break;
-                                        }
+                let signo2 = new Konva.Image({
+                    x: posicion,
+                    y: 320,
+                    image: signo,
+                    width: wIni,
+                    height: hIni, draggable: false, name: nombre
+                });
+                signo2.wIni = wIni;
+                signo2.hIni = hIni;
+                signo2.xIni = posicion;
+                signo2.yIni = 320;
+                signo2.nombre = nombre;
+                signosArreglo[signosArreglo.length] = signo2;
+                signo2.on('dragend', function () {
+                    let nameSigno = signo2.name();
+                    switch (nameSigno) {
+                        case "parentesisderecho":
+                            if (CuadroSignoDerecho != null) {
+                                signo2.x(CuadroSignoDerecho.x() - 20);
+                                signo2.y(CuadroSignoDerecho.y() - 10);
+                                signo2.height(hIni + 13);
+                                CuadroSignoDerecho.fill("white");
+                                for (let key in arregloCuadrados) {
+                                    if (arregloCuadrados[key] === CuadroSignoDerecho) {
+                                        seleccionados[key] = {cuadrado: CuadroSignoDerecho, signo: signo2, caracter: ")"};
+                                        break;
                                     }
-                                    cuadroSigno.fill("white");
-                                    cuadroSigno = null;
-                                } else {
-                                    signo2.x(posicion);
-                                    signo2.y(320);
-                                    signo2.width(wIni);
-                                    signo2.height(hIni);
                                 }
+                                CuadroSignoDerecho = null;
+                            } else {
+                                signo2.x(posicion);
+                                signo2.y(320);
+                                signo2.width(wIni);
+                                signo2.height(hIni);
+                            }
+                            break;
+                        case"parentesisizquierdo":
+                            if (CuadroSignoIzquierdo != null) {
+                                signo2.x(CuadroSignoIzquierdo.x() - 14);
+                                signo2.y(CuadroSignoIzquierdo.y() - 10);
+                                signo2.height(hIni + 13);
+                                CuadroSignoIzquierdo.fill("white");
+                                for (let key in arregloCuadrados) {
+                                    if (arregloCuadrados[key] === CuadroSignoIzquierdo) {
+                                        seleccionados[key] = {cuadrado: CuadroSignoIzquierdo, signo: signo2, caracter: "("};
+                                        break;
+                                    }
+                                }
+                                CuadroSignoIzquierdo = null;
+                            } else {
+                                signo2.x(posicion);
+                                signo2.y(320);
+                                signo2.width(wIni);
+                                signo2.height(hIni);
+                            }
+                            break;
+                        default:
+                            if (cuadroSigno != null) {
+                                signo2.x(cuadroSigno.x());
+                                signo2.y(cuadroSigno.y());
+                                signo2.width(cuadroSigno.width());
+                                signo2.height(cuadroSigno.height());
 
-                                break;
-                        }
-                         console.log(signosArreglo[len].x()+" "+ signosArreglo[len].y());
-                         $.post("POST/EnviarSigno",{x:signosArreglo[len].x(),y:signosArreglo[len].y(),i:len,tipo:1},(r)=>{
-                             console.log(r);
-                         });
-                    });
-                    layer.add(signo2);
-                    layer.batchDraw();
+                                for (let key in arregloCuadrados) {
+                                    if (arregloCuadrados[key] === cuadroSigno) {
+
+                                        seleccionados[key] = {cuadrado: cuadroSigno, signo: signo2, caracter: convertirCaracter(nameSigno)};
+                                        break;
+                                    }
+                                }
+                                cuadroSigno.fill("white");
+                                cuadroSigno = null;
+                            } else {
+                                signo2.x(posicion);
+                                signo2.y(320);
+                                signo2.width(wIni);
+                                signo2.height(hIni);
+                            }
+
+                            break;
+                    }
+                });
+                layer.add(signo2);
+                layer.batchDraw();
             }
             function convertirCaracter(signo) {
                 let caracter = "";
@@ -1049,13 +774,13 @@ $("#lblEnemigo").html($("#enemigo").html()+" sumo 1 punto");
             signos("resta", layer, 170);
             signos("division", layer, 230);
             signos("division", layer, 230);
-            signos("division", layer, 230);            
+            signos("division", layer, 230);
             signos("parentesisderecho", layer, 310);
             signos("parentesisderecho", layer, 310);
             signos("parentesisizquierdo", layer, 280);
             signos("parentesisizquierdo", layer, 280);
-            
-            
+
+
             function dados(i, layer, numero) {
                 let dado = new Image();
                 dado.onload = function () {
@@ -1247,7 +972,7 @@ $("#lblEnemigo").html($("#enemigo").html()+" sumo 1 punto");
                         numeros[numeros.length] = seleccionados[key].caracter;
                     }
                 }
-                return operacion == "" ? {operacion: "0+0", numerouno: 0, numerodos: 0, numerotres: 0, numerocuatro: 0} : {operacion: operacion, numerouno: numeros[0], numerodos: numeros[1], numerotres: numeros[2], numerocuatro: numeros[3], codigo: readGet.codigo};
+                return operacion == "" ? {operacion: "0+0", numerouno: 0, numerodos: 0, numerotres: 0, numerocuatro: 0} : {operacion: operacion, numerouno: numeros[0], numerodos: numeros[1], numerotres: numeros[2], numerocuatro: numeros[3]};
             }
 
             function validarOperacion() {
@@ -1282,3 +1007,4 @@ $("#lblEnemigo").html($("#enemigo").html()+" sumo 1 punto");
         </script>
     </body>
 </html>
+

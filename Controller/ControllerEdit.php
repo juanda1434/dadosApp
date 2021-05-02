@@ -44,6 +44,7 @@ class ControllerEdit {
 
         return (new Business())->finalizarRonda($PartidoDTO);
     }
+
     public function finalizarEnfrentamiento($codigo) {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
@@ -71,12 +72,12 @@ class ControllerEdit {
     public function enviarSigno($x, $y, $i, $tipo) {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/SignoDTO.php';
-        
-       return  (new Business())->enviarSigno(new SignoDTO($x, $y, $i, $tipo));
+
+        return (new Business())->enviarSigno(new SignoDTO($x, $y, $i, $tipo));
     }
-    
-    public function responderEnfrentamiento($operacion, $numerouno, $numerodos, $numerostres, $numerocuatro,$codigo) {
-        require_once RAIZ . 'Model/Business.php';        
+
+    public function responderEnfrentamiento($operacion, $numerouno, $numerodos, $numerostres, $numerocuatro, $codigo) {
+        require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/PartidoDTO.php';
         require_once RAIZ . 'Model/DTO/RespuestaDTO.php';
         require_once RAIZ . 'Model/DTO/PreguntaDTO.php';
@@ -85,10 +86,28 @@ class ControllerEdit {
         return (new Business())->responderEnfrentamiento($respuestaDTO);
     }
 
-    
     public function actualizarEstado() {
-       require_once RAIZ . 'Model/Business.php'; 
-       return (new Business())->actualizarEstado();
-       
+        require_once RAIZ . 'Model/Business.php';
+        return (new Business())->actualizarEstado();
+    }
+
+    public function enviarRespuestaDiagnostico(int $numeroUno, int $numeroDos, int $numeroTres, int $numeroCuatro, string $respuesta) :bool{
+        require_once RAIZ . 'Model/Business.php';
+        require_once RAIZ . 'Model/DTO/DiagnosticoDTO.php';
+        require_once RAIZ . 'Model/DTO/EstudianteDTO.php';
+        require_once RAIZ . 'Model/DTO/DiagnosticoPreguntaDTO.php';
+        require_once RAIZ . 'Model/DTO/PreguntaBaseDTO.php';
+        $diagnosticoDTO= new DiagnosticoDTO(null, null, null,null);
+        $preguntaBaseDTO = new PreguntaBaseDTO(null, $numeroUno, $numeroDos, $numeroTres, $numeroCuatro, null);
+        $diagnosticoPreguntaDTO=new DiagnosticoPreguntaDTO(null, null, $preguntaBaseDTO, null, null, null);
+        $diagnosticoPreguntaDTO->setRespuesta($respuesta);
+        $diagnosticoPreguntaDTO->setDiagnosticoDTO($diagnosticoDTO);
+        $diagnosticoDTO->agregarDiagnosticoPreguntaDTO($diagnosticoPreguntaDTO);
+        return (new Business())->enviarRespuestaDiagnostico($diagnosticoDTO);
+        return false;
+    }
+
+    public function iniciarDiagnostico() :bool{        
+        return (new Business())->empezarDiagnostico();
     }
 }

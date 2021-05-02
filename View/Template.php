@@ -4,8 +4,7 @@ if (isset($_GET["post"]) && $_GET["post"] == "post" && isset($_GET["ubicacionpos
     return;
 }
 
-if (isset($_GET["get"]) &&  $_GET["get"]=="get" && isset($_GET["ubicacionget"])) {
-   
+if (isset($_GET["get"]) &&  $_GET["get"]=="get" && isset($_GET["ubicacionget"])) {   
     include_once RAIZ . '/View/Method/GET/GET.php';
     return;
 }

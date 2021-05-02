@@ -1,27 +1,17 @@
 <?php
-//session_start();
-//if (!isset($_SESSION["loginEstudiante"])) {
-//    
-//    header("Location: Inicio");
-//}else{
-//    require_once RAIZ . 'Controller/ControllerGET.php'; 
-//    if(!(new ControllerGET())->validarHash()){
-//        header("Location: Logout");
-//    }
-//}
-//        $asd=[["nombre"=>"Estudiante1","punto"=>"2","sede"=>"Chapinero"],["nombre"=>"ESTUDIANTE1","punto"=>"2","sede"=>"Chapinero"],["nombre"=>"ESTUDIANTE1","punto"=>"2","sede"=>"Chapinero"]];
-//        
-//        require_once RAIZ.'Model/Database/Database.php';
-//        
-//        $bd = new Database();
-//        
-//        $con=$bd->connect();
-//        
-//        $stm=$con->prepare("select e.nombre,COUNT(puntajesede.idpuntajesede)puntos,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede GROUP BY puntajesede.idestudiante");
-//        $stm->execute();
-//        $estus= $stm->fetchAll();
-//        echo json_encode($estus,JSON_UNESCAPED_UNICODE);
-//        return;
+session_start();
+if (!isset($_SESSION["loginEstudiante"])) {
+
+    header("Location: Inicio");
+} else {
+    require_once RAIZ . 'Controller/ControllerGET.php';
+    if (!(new ControllerGET())->validarHash()) {
+        header("Location: Logout");
+    } else
+    if ((new ControllerGET())->validarDiagnostico()) {
+        header("Location: Diagnostico");
+    }
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -239,16 +229,16 @@
         <!-- jQuery -->
         <script src="View/Public/plugins/jquery/jquery.min.js"></script>
         <!-- Bootstrap 4 -->
-        
+
         <script src="View/Public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- AdminLTE App -->
         <script src="View/Public/dist/js/adminlte.min.js"></script>
         <script src="https://unpkg.com/konva@7.2.2/konva.min.js"></script>
-        
-     
-    <script>
-        
-           
+
+
+        <script>
+
+
             var estaJugando = false;
             var estaRuleta = false;
             var tablaNumeros = [];
@@ -292,8 +282,8 @@
                     let activo = i == 5 ? "activo" : "";
                     llenarTabla += `<div id="${(i + 1)}cuadrado" class="col-4 text-center p-3 numero ${activo}">
 
-                            <b >${(i + 1)}</b>
-                        </div>`;
+                                <b >${(i + 1)}</b>
+                            </div>`;
                 }
                 $("#container-numeros").html(llenarTabla);
 

@@ -5,7 +5,7 @@ class Business {
     public function getView($location) {
         $locations = ["Inicio", "InicioEstudiante", "Prueba", "Prueba2", "Practica",
             "InicioDocente", "Logout", "RondaUno", "PB", "RondaUnoDocente", "Grupos",
-            "PuntajeGrupo", "Enfrentamiento", "LoginE"];
+            "PuntajeGrupo", "Enfrentamiento", "LoginE", "Diagnostico"];
         $value = "";
         foreach ($locations as $locationn) {
             if (strcasecmp($location, $locationn) == 0) {
@@ -23,6 +23,7 @@ class Business {
         require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
         return (new EstudianteDAO())->getListaEstudiantesParticipantes();
     }
+
     public function enviarPuntoSede($correcto) {
         $exito = false;
         session_start();
@@ -32,7 +33,7 @@ class Business {
             require_once RAIZ . 'Model/DTO/EstudianteDTO.php';
             $sedeDto = new SedeDTO(null, null);
             $sedeDto->setEstudiantesDTO(new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null));
-            $exito = (new SedeDAO())->enviarPunto($sedeDto,$correcto);
+            $exito = (new SedeDAO())->enviarPunto($sedeDto, $correcto);
         } else {
             throw new Exception("Debes estar logeado");
         }
@@ -167,29 +168,28 @@ class Business {
         require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
         $exito = false;
         $estudianteDTO->setHash(md5(time()));
-        $estudiante = (new EstudianteDAO())->login($estudianteDTO);        
+        $estudiante = (new EstudianteDAO())->login($estudianteDTO);
         if (count($estudiante) > 0) {
-            $exito = true;            
+            $exito = true;
             session_start();
-            $str=$estudianteDTO->getHash();
-            setcookie("conexion4",$str, time()+24*60*60,"/");
+            $str = $estudianteDTO->getHash();
+            setcookie("conexion4", $str, time() + 24 * 60 * 60, "/");
             $_SESSION["loginEstudiante"] = true;
             $_SESSION["idEstudiante"] = $estudiante["idestudiante"];
             $_SESSION["infoEstudiante"] = ["id" => $estudiante["idestudiante"], "nombre" => $estudiante["nombre"], "sede" => $estudiante["sede"], "idSede" => $estudiante["idsede"]];
         }
         return $exito;
     }
-    
+
     public function esMiHash() {
-        $exito=false;
-        if(isset($_COOKIE["conexion4"])){
+        $exito = false;
+        if (isset($_COOKIE["conexion4"])) {
             require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
-            $hash=$_COOKIE["conexion4"];
-            $exito=(new EstudianteDAO())->esMiHash($hash,($_SESSION["infoEstudiante"])["id"]);
+            $hash = $_COOKIE["conexion4"];
+            $exito = (new EstudianteDAO())->esMiHash($hash, ($_SESSION["infoEstudiante"])["id"]);
         }
         return $exito;
     }
-    
 
     public function unirsePartida($registroDTO) {
         session_start();
@@ -220,6 +220,91 @@ class Business {
         }
 
         return $exito;
+    }
+
+    public function enviarRespuestaDiagnostico(DiagnosticoDTO $diagnosticoDTO): bool {
+        session_start();
+        $exito = false;
+        if (isset($_SESSION["infoEstudiante"])) {
+            require RAIZ . 'Model/DAO/DiagnosticoDAO.php';
+            require RAIZ . 'Model/DAO/DiagnosticoPreguntaDAO.php';
+            $diagnosticoDAO = new DiagnosticoDAO();
+            $diagnosticoDTO->setEstudianteDTO(new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null));
+            if ($diagnosticoDAO->validarEnDiagnostico($diagnosticoDTO) && $diagnosticoDAO->validarTiempoDiagnostico($diagnosticoDTO)) {
+                $diagnosticoPreguntaDAO = new DiagnosticoPreguntaDAO();
+                if ($diagnosticoPreguntaDAO->validarPreguntaIngresada($diagnosticoDTO->getFirtDiagnosticoPreguntaDTO())) {
+                    return (new DiagnosticoDAO())->enviarRespuestaDiagnostico($diagnosticoDTO);
+                } else {
+                    throw new Exception("Los numeros ingresados no coinciden con los numeros actuales");
+                }
+            } else {
+                throw new Exception("Su prueba diagnostica ya fue finalizada.");
+            }
+        }
+        return $exito;
+    }
+
+    public function empezarDiagnostico(): bool {
+        session_start();
+        require RAIZ . 'Model/DAO/DiagnosticoDAO.php';
+        require RAIZ . 'Model/DTO/EstudianteDTO.php';
+        require RAIZ . 'Model/DTO/DiagnosticoDTO.php';
+        $diagnosticoDTO = new DiagnosticoDTO(null, new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null), null, null);
+        $diagnosticoDAO = (new DiagnosticoDAO());
+        if (isset($_SESSION["infoEstudiante"]) && $diagnosticoDAO->validarDiagnosticoOff($diagnosticoDTO)) {
+            return $diagnosticoDAO->iniciarDiagnostico($diagnosticoDTO);
+        }
+        return false;
+    }
+
+    public function getCampoDiagnostico(): array {
+        session_start();
+        $respuesta = array("opcion" => 1);
+        if (isset($_SESSION["infoEstudiante"])) {
+            require RAIZ . 'Model/DAO/DiagnosticoDAO.php';
+            require RAIZ . 'Model/DTO/EstudianteDTO.php';
+            require RAIZ . 'Model/DTO/DiagnosticoDTO.php';
+            $diagnosticoDAO = new DiagnosticoDAO();
+            $diagnosticoDTO = new DiagnosticoDTO(null, new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null), null, null);
+            if ($diagnosticoDAO->validarEnDiagnostico($diagnosticoDTO)) {
+                if ($diagnosticoDAO->validarTiempoDiagnostico($diagnosticoDTO)) {
+                    require RAIZ . 'Model/DAO/DiagnosticoPreguntaDAO.php';
+                    require RAIZ . 'Model/DTO/DiagnosticoPreguntaDTO.php';
+                    $diagnosticoPreguntaDTO = new DiagnosticoPreguntaDTO(null, $diagnosticoDTO, null, null, null, null);
+                    $diagnosticoPreguntaDAO = new DiagnosticoPreguntaDAO();
+                    $pregunta = $diagnosticoPreguntaDAO->listarPregunta($diagnosticoPreguntaDTO);
+                    if ($pregunta != null) {
+                        return ["opcion" => 5, "pregunta" => $pregunta];
+                    } else {
+                        return ["opcion" => 4];
+                    }
+                } else {
+                    return ["opcion" => 3];
+                }
+            } else {
+                return ["opcion" => 2];
+            }
+        }
+
+        return $respuesta;
+    }
+
+    public function validarEnDiagnostico() {
+        if(!isset($_SESSION)){
+             session_start(); 
+        }      
+        if (isset($_SESSION["infoEstudiante"])) {            
+            require RAIZ . 'Model/DTO/EstudianteDTO.php';
+            require RAIZ . 'Model/DTO/DiagnosticoDTO.php';            
+            require RAIZ . 'Model/DAO/DiagnosticoDAO.php';            
+            $diagnosticoDAO = new DiagnosticoDAO();
+            $diagnosticoDTO = new DiagnosticoDTO(null, null, null, null);
+            $diagnosticoDTO->setEstudianteDTO(new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null));
+            if ($diagnosticoDAO->validarDiagnosticoOff($diagnosticoDTO) || ($diagnosticoDAO->validarEnDiagnostico($diagnosticoDTO) && $diagnosticoDAO->validarTiempoDiagnostico($diagnosticoDTO))) {
+                return true;                
+            }
+        }
+        return false;
     }
 
     public function getCampoActual(PartidoDTO $partidoDTO) {
@@ -411,11 +496,12 @@ class Business {
         require_once RAIZ . 'Model/DAO/EnfrentamientoDAO.php';
         return (new EnfrentamientoDAO())->getCuadros($enfrentamientoDTO);
     }
+
     public function getCuadrosEstudiante($enfrentamientoDTO) {
         session_start();
-        if(isset($_SESSION["infoEstudiante"])){        
-        require_once RAIZ . 'Model/DAO/EnfrentamientoDAO.php';
-        return ["id"=>($_SESSION["infoEstudiante"])["id"],"cuadro"=>(new EnfrentamientoDAO())->getCuadros($enfrentamientoDTO)];        
+        if (isset($_SESSION["infoEstudiante"])) {
+            require_once RAIZ . 'Model/DAO/EnfrentamientoDAO.php';
+            return ["id" => ($_SESSION["infoEstudiante"])["id"], "cuadro" => (new EnfrentamientoDAO())->getCuadros($enfrentamientoDTO)];
         }
         return [];
     }
@@ -509,19 +595,20 @@ class Business {
     }
 
     public function actualizarEstado() {
-        
+
         session_start();
-        $exito=false;
-        if(isset($_SESSION["infoEstudiante"])){
+        $exito = false;
+        if (isset($_SESSION["infoEstudiante"])) {
             require_once RAIZ . 'Model/DTO/EstudianteDTO.php';
             require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
-           $estudianteDTO=new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null); 
-           $estudianteDTO->setHash($_COOKIE["conexion4"]);
+            $estudianteDTO = new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null);
+            $estudianteDTO->setHash($_COOKIE["conexion4"]);
 //           if(isset($_COOKIE["conexion"])){
 //               unset($_COOKIE["conexion"]);
 //           }
-           $exito=(new EstudianteDAO())->mantenerConexion($estudianteDTO);
+            $exito = (new EstudianteDAO())->mantenerConexion($estudianteDTO);
         }
         return $exito;
     }
+
 }
