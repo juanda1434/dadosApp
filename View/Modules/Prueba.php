@@ -1,28 +1,28 @@
 <?php
-
-require_once RAIZ.'Model/Database/Database.php';
-
-$conn=(new Database())->connect();
-$stm=$conn->prepare("select iddiagnostico from diagnostico");
-$stm->execute();
-$diagnosticos = $stm->fetchAll();
-function a($diagnostico){
-    require_once RAIZ.'Model/Database/Database.php';
-$conn=(new Database())->connect();
-    for($i=1;$i<11;$i++){
-        $numero=$diagnostico["iddiagnostico"];
-        $stmu=$conn->prepare("insert into diagnosticopregunta (iddiagnostico,idpreguntabase) values($numero,$i)");
-        $stmu->execute();
-        
-    }
-    $numero=null;
-    $i=1;
-}
-array_map("a", $diagnosticos);
-//session_start();
-//if (isset($_SESSION["loginEstudiante"])) {
-//    header("Location: InicioEstudiante");
+//
+//require_once RAIZ.'Model/Database/Database.php';
+//
+//$conn=(new Database())->connect();
+//$stm=$conn->prepare("select iddiagnostico from diagnostico");
+//$stm->execute();
+//$diagnosticos = $stm->fetchAll();
+//function a($diagnostico){
+//    require_once RAIZ.'Model/Database/Database.php';
+//$conn=(new Database())->connect();
+//    for($i=1;$i<11;$i++){
+//        $numero=$diagnostico["iddiagnostico"];
+//        $stmu=$conn->prepare("insert into diagnosticopregunta (iddiagnostico,idpreguntabase) values($numero,$i)");
+//        $stmu->execute();
+//        
+//    }
+//    $numero=null;
+//    $i=1;
 //}
+//array_map("a", $diagnosticos);
+session_start();
+if (isset($_SESSION["loginEstudiante"])) {
+    header("Location: InicioEstudiante");
+}
 ?>
 <!DOCTYPE html>
 <html>

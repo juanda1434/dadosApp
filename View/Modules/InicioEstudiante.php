@@ -52,7 +52,11 @@ if (!isset($_SESSION["loginEstudiante"])) {
             footer.bg-navy{
                 background-color: #133163!important;
             }
-
+@media (max-width: 600px) {
+  h2 {
+    font-size: 1.55rem;
+  }
+}
         </style>
     </head>
     <body class="hold-transition layout-top-nav">
