@@ -1,15 +1,15 @@
 <?php
 
 function connect() {
-    $usuario = "root";
-    $contrasenia = "";
-    $baseDatos = "pruebaoff";
-    $host = "localhost";
+//    $usuario = "root";
+//    $contrasenia = "";
+//    $baseDatos = "pruebaoff";
+//    $host = "localhost";
 
-//         $usuario="u603952219_sucesora";
-//        $contrasenia="D9a1oo30____";
-//        $baseDatos="u603952219_noconexion";
-//        $host="localhost";
+         $usuario="u603952219_sucesora";
+        $contrasenia="D9a1oo30____";
+        $baseDatos="u603952219_noconexion";
+        $host="localhost";
 //        $usuario="u603952219_iesapostoles";
 //        $contrasenia="Santosapostoles1494";
 //        $baseDatos="u603952219_dadosprimaria";
