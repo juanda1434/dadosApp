@@ -148,9 +148,9 @@ if (!isset($_SESSION["loginEstudiante"])) {
                                             <div class="col-6">
                                                 <button id="btnPlay" type="button" class="btn btn-info btn-flat btn-block"><i class="fas fa-paper-plane "></i> Jugar</button>
                                             </div>
-                                            <div class="col-6">
+<!--                                            <div class="col-6">
                                                 <button id="btnSiguiente" type="button" class="btn btn-info btn-flat btn-block disabled"><i class="fas fa-paper-plane "></i> Siguiente</button>
-                                            </div>
+                                            </div>-->
 
                                         </div>
 
@@ -165,9 +165,10 @@ if (!isset($_SESSION["loginEstudiante"])) {
                             <div class="login-box col-10 col-md-6 col-lg-6 ">
                                 <div  class="card mb-0 shadow-none"  style="background-color: rgba(22,22,22,0);">
 
-
-                                    <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">
-                                        <div class="col-12 row  justify-content-center">
+                                        
+                                    <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">                                        
+                                        <h5 class="" "><b id="lblMisPuntos">Mi puntaje : 0</b></h5>
+                                        <div class="col-12 row  justify-content-center">                                            
                                             <div class="col-12 row align-content-center" >
                                                 <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="Cargando castillo..."/>
                                             </div>
@@ -266,7 +267,8 @@ if (!isset($_SESSION["loginEstudiante"])) {
                 function actualizarCastillo() {
                     $.get("GET/SedeEstudiante", (r) => {
                         if (r.sede != undefined) {
-                            $("#lblCastilloPractica").html("Castillo " + r.sede["sede"])
+                            $("#lblCastilloPractica").html("Castillo " + r.sede["sede"]);
+                            $("#lblMisPuntos").html("Mi puntaje :" + r.sede["correcto"]);
                             $("#lblPuntosPractica").html("Puntos " + r.sede["puntaje"]);
                             $("#imgCastillo").prop("src", `View/Public/img/castillo${r.sede["id"]}.png`);
 
@@ -345,6 +347,15 @@ if (!isset($_SESSION["loginEstudiante"])) {
                 $("#btnResponder").on("click", () => {
 
                     if (estaJugando && !estaRuleta) {
+                        const expresionRegular= /(\({0,1}[1-6]{1}\){0,1}([+]|[-]|[\/]|[*])\({0,1}[1-6]{1}\){0,1})([+]|[-]|[\/]|[*])(\({0,1}[1-6]{1}\){0,1}([+]|[-]|[\/]|[*])\({0,1}[1-6]{1}\){0,1})/;
+                        if(!expresionRegular.test(getOperacion())){
+                             $(document).Toasts('create', {
+                                class: 'bg-danger',
+                                title: 'Ups !',
+                                body: 'Recuerda que debes utilizar todos los numeros'
+                            });
+                            return;
+                        }
                         let resultado = validarOperacion();
                         if (resultado == tablaNumeros[numeroElegido]) {
                             $(document).Toasts('create', {
@@ -359,7 +370,7 @@ if (!isset($_SESSION["loginEstudiante"])) {
                             activo.addClass("inactivo");
                             tablaNumeros.splice(numeroElegido, 1)
                             numeroElegido = -1;
-
+                            
                             next();
                             $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
                         } else {

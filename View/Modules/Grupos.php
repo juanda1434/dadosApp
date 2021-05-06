@@ -139,9 +139,18 @@
                                         </div>
                                         <div class="row col-12 col-lg-3">
                                             <div class="col-12">
-                                                <a href="#" id="btnGenerarExcel" class="btn btn-success "><li class="fas fa-save"> </li> Generar Excel</a>
+                                                <a href="#" id="btnExcelParticipantePractica" class="btn btn-success " value="0"><li class="fas fa-save"> </li> Excel participantes practica</a>
                                             </div>
                                         </div>
+                                        
+                                        
+                                        <div class="row col-12 col-lg-3">
+                                            <div class="col-12">
+                                                <a href="#" id="btnExcelNoParticipanPractica" class="btn btn-success "><li class="fas fa-save"> </li> Excel no participan practica</a>
+                                            </div>
+                                        </div>
+                                        
+                                        
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
@@ -149,9 +158,40 @@
 
 
                             </div>
+                            <div class="col-12">
+<div class="card card-primary">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Generador de excel</h3>
 
+
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12"><h5>Puntos practica diario</h5> </div>
+                                                <a href="#"  id="btnExcelParticipantePractica1" class="btn btn-success col-3 col-lg-1 mr-1 mb-1" value="1"><li class="fas fa-save"> </li> Lunes</a>
+                                                <a href="#"  id="btnExcelParticipantePractica2" class="btn btn-success col-3 col-lg-1 mr-1 mb-1" value="2"><li class="fas fa-save"> </li> Martes</a>
+                                                <a href="#"  id="btnExcelParticipantePractica3" class="btn btn-success col-4 col-lg-2 mr-1 mb-1" value="3"><li class="fas fa-save"> </li> Miercoles</a>
+                                                <a href="#"  id="btnExcelParticipantePractica4" class="btn btn-success col-3 col-lg-1 mr-1 mb-1" value="4"><li class="fas fa-save"> </li> Jueves</a>
+                                                <a href="#"  id="btnExcelParticipantePractica5" class="btn btn-success col-4 col-lg-1 mr-1 mb-1" value="5"><li class="fas fa-save"> </li> Viernes</a>
+                                                <a href="#"  id="btnExcelParticipantePractica6" class="btn btn-success col-4 col-lg-1 mr-1" value="6"><li class="fas fa-save"> </li> Sabado</a>
+                                                <a href="#"  id="btnExcelParticipantePractica7" class="btn btn-success col-4 col-lg-2 " value="7"><li class="fas fa-save"> </li> Domingo</a>
+                                            </div>
+                                       
+                                        
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>                                
+                                
+                                
+                                
+                            </div>
                         </div>
 
+                    
+                        <div class="card">
+                            
+                        </div>
+                        
                     </section>
                     <!-- /.content -->
                     <!-- Main content -->
@@ -248,8 +288,25 @@
         <script>
 
 var dataExcel = {};
- const generarExcel = () => {
-                fetch('GET/MS')
+ const generarExcelParticipantesPractica = (e) => {
+                fetch('GET/MS/codigo='+($(e)[0].target).getAttribute("value"))
+                        .then(r => {
+
+                            return r.json();
+                        }).then(d => {
+                            dataExcel=d;
+                    downloadAsExcel();
+                    
+                }).catch((e)=>{
+                    $(document).Toasts('create', {
+                                    class: 'bg-danger',
+                                    title: 'Error del sistema !',
+                                    body: "Error al generar el archivo excel."
+                                });
+                });
+            }
+const generarExcelNoParticipanPractica = () => {
+                fetch('GET/PdfNoParticipa')
                         .then(r => {
 
                             return r.json();
@@ -268,11 +325,17 @@ var dataExcel = {};
 
 
 
-
             $(() => {
 
-                document.getElementById("btnGenerarExcel").onclick= generarExcel;
-                  
+                document.getElementById("btnExcelParticipantePractica").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelParticipantePractica1").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelParticipantePractica2").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelParticipantePractica3").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelParticipantePractica4").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelParticipantePractica5").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelParticipantePractica6").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelParticipantePractica7").onclick= (e)=>{generarExcelParticipantesPractica(e)};
+                document.getElementById("btnExcelNoParticipanPractica").onclick= generarExcelNoParticipanPractica;
                 function botones(estado, codigo, key) {
                     let btns = "";
                     switch (estado) {

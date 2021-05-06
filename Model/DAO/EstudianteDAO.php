@@ -154,10 +154,13 @@ class EstudianteDAO {
         return $exito;
     }
 
-    public function getListaEstudiantesParticipantes() {
+    public function getListaEstudiantesParticipantes($filter) {
         $estos = [];
+        $dias = [["2021-05-03 05:00:00","2021-05-09 22:00:00"],["2021-05-03 05:00:00","2021-05-04 11:50:00"],["2021-05-04 11:51:00","2021-05-04 21:30:00"],["2021-05-05 05:00:00","2021-05-05 21:00:00"],["2021-05-06 05:00:00","2021-05-06 21:00:00"],["2021-05-07 05:00:00","2021-05-07 21:00:00"],["2021-05-08 05:00:00","2021-05-08 21:00:00"],["2021-05-09 05:00:00","2021-05-09 21:00:00"]];
+        $fecha1=($dias[$filter])[0];
+        $fecha2=($dias[$filter])[1];
         try {
-            $stm = $this->conexion->prepare("select e.nombre,SUM(if(puntajesede.correcto,0,1)) incorrecto,SUM(if(puntajesede.correcto,1,0)) correcto,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede GROUP BY puntajesede.idestudiante ORDER by e.nombre");
+            $stm = $this->conexion->prepare("select e.nombre,SUM(if(puntajesede.correcto,0,1)) incorrecto,SUM(if(puntajesede.correcto,1,0)) correcto,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede WHERE puntajesede.fecharegistro BETWEEN '$fecha1' and '$fecha2' GROUP BY puntajesede.idestudiante ORDER by s.idsede,correcto desc,incorrecto asc");
             if ($stm->execute() && $stm->rowCount() > 0) {
                 $estus = $stm->fetchAll();
 
@@ -171,4 +174,20 @@ class EstudianteDAO {
         return $estos;
     }
 
+    public function getListaEstudiantesNoParticipantes() {
+        $estos = [];
+        try {
+            $stm = $this->conexion->prepare("select estudiante.nombre,sede.nombre sede,if(participantes.idestudiante is null ,'Sin realizar','Realizado') diagnostico from estudiante left join puntajesede on puntajesede.idestudiante=estudiante.idestudiante INNER JOIN sede on sede.idsede=estudiante.idsede left join (SELECT estudiante.idestudiante FROM estudiante left join diagnostico on estudiante.idestudiante=diagnostico.iddiagnostico where diagnostico.fechainicio is null)participantes on participantes.idestudiante=estudiante.idestudiante where puntajesede.idestudiante is null ORDER BY estudiante.idsede,diagnostico");
+            if ($stm->execute() && $stm->rowCount() > 0) {
+                $estus = $stm->fetchAll();
+
+                foreach ($estus as $value) {
+                    $estos[] = ["nombre" => $value["nombre"], "sede" => $value["sede"],"diagnostico" => $value["diagnostico"]];
+                }
+            }
+        } catch (Exception $ex) {
+            
+        }
+        return $estos;
+    }
 }

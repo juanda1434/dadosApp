@@ -4,7 +4,7 @@ function GET($ubicacion) {
     $ubicaciones = ["PartidoActivo","PuntajesPrimeraRonda","CampoActual","Time","GanadoresCuadro",
         "Cuadros","SedesGrados","PartidosDocente","EstadoRegistro","PuntajesGrupo","CampoVersus",
         "EstudiantesVersus","CampoEnfrentamiento","PartidoActivoEnfrentamiento","Sede","SedeEstudiante",
-        "CuadrosEstudiante","MS","CampoDiagnostico","LinkPrueba"];
+        "CuadrosEstudiante","MS","CampoDiagnostico","LinkPrueba","PdfNoParticipa"];
     $r = "";
     foreach ($ubicaciones as $ubica) {
         if ($ubica == $ubicacion) {

@@ -19,29 +19,63 @@
 //    $i=1;
 //}
 //array_map("a", $diagnosticos);
-session_start();
-if (isset($_SESSION["loginEstudiante"])) {
-    header("Location: InicioEstudiante");
-}
+
+//session_start();
+//if (isset($_SESSION["loginEstudiante"])) {
+//    header("Location: InicioEstudiante");
+//}
+
+
+$sql= "select estudiante.idestudiante,estudiante.nombre,GROUP_CONCAT(unix_timestamp(puntajesede.fecharegistro) ORDER BY puntajesede.fecharegistro DESC SEPARATOR ';')tiempo,GROUP_CONCAT(puntajesede.correcto ORDER BY puntajesede.fecharegistro DESC SEPARATOR ';')correcto from puntajesede  INNER JOIN estudiante on estudiante.idestudiante=puntajesede.idestudiante where puntajesede.fecharegistro BETWEEN '2021-05-04 11:55:00' and '2021-05-05 11:55:00' GROUP by puntajesede.idestudiante";
+require_once RAIZ.'Model/Database/Database.php';
+
+$conn=(new Database())->connect();
+$stm=$conn->prepare($sql);
+$stm->execute();
+$diagnosticos = $stm->fetchAll();
+$final = [];
+array_map(function ($niño){
+    $tiempos = explode(";", $niño["tiempo"]);
+    $correctas= explode(";",$niño["correcto"]);    
+    $tiemposFormateados=[];
+    echo $niño["nombre"]."<br>";
+    $bien=0;
+    $mal=0;
+    for($i=0;$i<count($tiempos)-1;$i++){
+        $segundos= intval($tiempos[$i])- intval($tiempos[$i+1]) -5;
+        if($segundos>=10 && $segundos<1000){
+           $minutos = $segundos/60;
+        echo ($segundos>60 ? $minutos>60?($minutos/60)."Horas":$minutos."Minutos" : $segundos." Segundos" )."   ".($correctas[$i]==1 ? "Correcta":"Incorrecta");
+        echo "<br>"; 
+            
+            $bien+=$correctas[$i]==1 ? 1:0;
+            $mal +=$correctas[$i]==0 ?1:0;
+        }
+        
+        
+    }
+    echo "correctas :".$bien." incorrectas :".$mal."<br>";
+},$diagnosticos);
+return;
 ?>
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Login Estudiante</title>
-        <!-- Tell the browser to be responsive to screen width -->
+         Tell the browser to be responsive to screen width 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Font Awesome -->
+         Font Awesome 
         <link rel="stylesheet" href="View/Public/plugins/fontawesome-free/css/all.min.css">
-        <!-- Ionicons -->
+         Ionicons 
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-        <!-- icheck bootstrap -->
+         icheck bootstrap 
         <link rel="stylesheet" href="View/Public/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
-        <!-- Theme style -->
+         Theme style 
         <link rel="stylesheet" href="View/Public/dist/css/adminlte.min.css">
-        <!-- Google Font: Source Sans Pro -->
+         Google Font: Source Sans Pro 
         <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
         <style>
 
@@ -84,7 +118,7 @@ if (isset($_SESSION["loginEstudiante"])) {
                     </button>
 
                     <div class="collapse navbar-collapse order-3" id="navbarCollapse">
-                        <!-- Left navbar links -->
+                         Left navbar links 
                         <ul class="navbar-nav">
                             <li class="nav-item">
                                 <a href="Inicio" class="nav-link">Inicio</a>
@@ -114,24 +148,24 @@ if (isset($_SESSION["loginEstudiante"])) {
             </div>
                
 <footer class="main-footer bg-navy ml-0" >
-                <!-- To the right -->
+                 To the right 
                 <div class="float-right ">
                     Familia y escuela unidas para avanzar
                 </div>
-                <!-- Default to the left -->
+                 Default to the left 
                 <strong><div >CalcuDados </div>  <a class="d-none d-md-inline"  href="https://colsantosapostoles.edu.co/web/"> Institucion Educativa Colegio Santos Apostoles</a></strong>
             </footer>
             </div>
       
-        <!-- /.login-box -->
+         /.login-box 
 
-        <!-- jQuery -->
+         jQuery 
         <script src="View/Public/plugins/jquery/jquery.min.js"></script>
-        <!-- Bootstrap 4 -->
+         Bootstrap 4 
         <script src="View/Public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- AdminLTE App -->
+         AdminLTE App 
         <script src="View/Public/dist/js/adminlte.min.js"></script>
 
         <script type="module" src="View/Public/js/Castillos.js?v=<?php echo filemtime(RAIZ . "View/Public/js/MainJuego.js"); ?>"></script>
     </body>
-</html>
+</html>-->

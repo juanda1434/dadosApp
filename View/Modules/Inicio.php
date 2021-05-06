@@ -95,7 +95,7 @@ if (isset($_SESSION["loginEstudiante"])) {
                     <div class="row align-self-center col-12">
 
             <div class="align-self-center row justify-content-center col-12" id="panelCastillos">
-                <h1>Cargando castillos ...</h1>
+                <h1>El juego estara activo de 7am a 9pm.</h1>
                 
             </div>
                 

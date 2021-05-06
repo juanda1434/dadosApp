@@ -142,9 +142,13 @@ class ControllerGET {
         return (new Business())->getEstudianteVersus($partidoDTO);
     }
 
-    public function getListaEstudiantesParticipantes() {
+    public function getListaEstudiantesParticipantes($filter) {
         require_once RAIZ . '/Model/Business.php';
-        return (new Business())->getListaEstudiantesParticipantes();
+        return (new Business())->getListaEstudiantesParticipantes($filter);
+    }
+    public function getListaEstudiantesNoParticipantes() {
+        require_once RAIZ . '/Model/Business.php';
+        return (new Business())->getListaEstudiantesNoParticipantes();
     }
 
 }
