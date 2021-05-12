@@ -26,7 +26,7 @@
 //}
 
 
-$sql= "select estudiante.idestudiante,estudiante.nombre,GROUP_CONCAT(unix_timestamp(puntajesede.fecharegistro) ORDER BY puntajesede.fecharegistro DESC SEPARATOR ';')tiempo,GROUP_CONCAT(puntajesede.correcto ORDER BY puntajesede.fecharegistro DESC SEPARATOR ';')correcto from puntajesede  INNER JOIN estudiante on estudiante.idestudiante=puntajesede.idestudiante where puntajesede.fecharegistro BETWEEN '2021-05-04 11:55:00' and '2021-05-05 11:55:00' GROUP by puntajesede.idestudiante";
+$sql= "select estudiante.idestudiante,estudiante.nombre,GROUP_CONCAT(unix_timestamp(puntajesede.fecharegistro) ORDER BY puntajesede.fecharegistro DESC SEPARATOR ';')tiempo,GROUP_CONCAT(puntajesede.correcto ORDER BY puntajesede.fecharegistro DESC SEPARATOR ';')correcto from puntajesede  INNER JOIN estudiante on estudiante.idestudiante=puntajesede.idestudiante where puntajesede.fecharegistro BETWEEN '2021-05-07 05:00:00' and '2021-05-07 21:00:00' GROUP by puntajesede.idestudiante";
 require_once RAIZ.'Model/Database/Database.php';
 
 $conn=(new Database())->connect();

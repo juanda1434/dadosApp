@@ -1,15 +1,14 @@
 <?php
 session_start();
-if (!isset($_SESSION["loginEstudiante"])) {
-
+if (!isset($_SESSION["infoEstudiante"])) {
     header("Location: Inicio");
 } else {
     require_once RAIZ . 'Controller/ControllerGET.php';
     if (!(new ControllerGET())->validarHash()) {
         header("Location: Logout");
     } else
-    if ((new ControllerGET())->validarDiagnostico()) {
-        header("Location: Diagnostico");
+    if (!(new ControllerGET())->validarDiagnostico()) {
+        header("Location: Inicio");
     }
 }
 ?>
@@ -64,6 +63,13 @@ if (!isset($_SESSION["loginEstudiante"])) {
                 background-color: #e9ecef;
             }
 
+            .list-group-item.activoo.lose{
+                background-color: #ffebee;
+            }
+            .list-group-item.activoo.win{
+                background-color: #c8e6c9;
+            }
+
             .brand-image.img-circle{
                 height: 53px!important;
             }
@@ -81,7 +87,7 @@ if (!isset($_SESSION["loginEstudiante"])) {
         <div class="wrapper">
             <nav class="main-header navbar navbar-expand-md navbar-dark ">
                 <div class="container">
-                    <a href="Practica" class="navbar-brand">
+                    <a href="Diagnostico" class="navbar-brand">
                         <img src="View/Public/img/logo.png" alt="AdminLTE Logo" class="brand-image img-circle  elevation-3"
                              >
                         <span class="brand-text font-weight-light">Colegio Santos Apostoles</span>
@@ -97,7 +103,9 @@ if (!isset($_SESSION["loginEstudiante"])) {
                             <li class="nav-item">
                                 <a href="InicioEstudiante" class="nav-link">Volver Menu</a>
                             </li>
-
+                            <li class="nav-item">
+                                <a href="Logout" class="nav-link">Salir</a>
+                            </li>
                         </ul>
 
 
@@ -110,15 +118,41 @@ if (!isset($_SESSION["loginEstudiante"])) {
 
                 <div class="container ">
                     <div class="row justify-content-center">
+                        <div class="row col-12  justify-content-center mt-lg-5">
+                            <div class="">
+
+                                <!-- /.login-logo -->
+                                <div id="banderaTabla" class="card">
+                                    <div class="card-header text-center">
+                                        <h3 >Antes de <b>iniciar el juego</b> debes presentar la siguiente <b>prueba diagnóstica</b>.
+                                            <br><br>Realiza la prueba <b>sin ayuda de tus padres</b>, para que puedas evidenciar tus avances durante el juego.
+                                            <br><br>Recuerda que esta prueba <b>no tiene calificación</b>.
+                                        <br><br>Esta prueba tiene una duración máxima de <b>20 minutos</b>.
+                                        <br><br><b>Dar click en empezar prueba diagnóstica</b></h3>
+
+                                    </div>
+                                    <div  class="card-body  pt-0 pb-0 pl-1 pr-2">       
+
+                                        <div class="row p-4 justify-content-center" >
+                                            <button type="button" class="btn btn-primary" disabled="" id="btnEmpezarPrueba">Empezar prueba diagnóstica</button>
+
+                                        </div>
+
+
+                                    </div>
+                                    <!-- /.login-card-body -->
+                                </div>
+                            </div>
+                        </div>
 
                         <div class=" row col-12 col-lg-6 justify-content-center mt-5">
-
                             <div class="login-box">
 
                                 <!-- /.login-logo -->
                                 <div id="banderaTablero" class="card ">
                                     <div class="card-header text-center ">
                                         <h2>Calcu<b>Dados</b></h2>
+                                        <h3 id="numeroPregunta"></h3>
 
                                     </div>
                                     <div  class="card-body login-card-body p-0 ">       
@@ -139,20 +173,11 @@ if (!isset($_SESSION["loginEstudiante"])) {
                                         <div class="row justify-content-center">
 
                                             <div class="col-6">
-                                                <button id="btnResponder" type="button" class="btn btn-info btn-flat btn-block disabled"><i class="fas fa-paper-plane "></i> Responder</button>
+                                                <button id="btnResponder" type="button" class="btn btn-info btn-flat btn-block" disabled=""><i class="fas fa-paper-plane "></i> Responder</button>
                                             </div>
 
                                         </div>
-                                        <div class="row lineat">
 
-                                            <div class="col-6">
-                                                <button id="btnPlay" type="button" class="btn btn-info btn-flat btn-block"><i class="fas fa-paper-plane "></i> Jugar</button>
-                                            </div>
-<!--                                            <div class="col-6">
-                                                <button id="btnSiguiente" type="button" class="btn btn-info btn-flat btn-block disabled"><i class="fas fa-paper-plane "></i> Siguiente</button>
-                                            </div>-->
-
-                                        </div>
 
 
 
@@ -161,27 +186,7 @@ if (!isset($_SESSION["loginEstudiante"])) {
                                 </div>
                             </div>
                         </div>
-                        <div class="row col-12 col-lg-6 justify-content-center ">
-                            <div class="login-box col-10 col-md-6 col-lg-6 ">
-                                <div  class="card mb-0 shadow-none"  style="background-color: rgba(22,22,22,0);">
-
-                                        
-                                    <div class="card-body  col-12 row justify-content-center"  style="background-color: rgba(0,0,0,0);">                                        
-                                        <h5 class="" "><b id="lblMisPuntos">Mi puntaje : 0</b></h5>
-                                        <div class="col-12 row  justify-content-center">                                            
-                                            <div class="col-12 row align-content-center" >
-                                                <img id="imgCastillo" src="View/Public/img/castillo1.png" class="img-fluid col-12" alt="Cargando castillo..."/>
-                                            </div>
-                                            <div class="col-12 col-lg-10 align-self-end text-center " style="background-color:rgba(28,86,84,0.45);position: absolute ;">
-                                                <h4 class=" text-white" style="border-bottom: 1px solid rgba(255,255,255,0.5)"><b id="lblCastilloPractica">Castillo Cargando...</b></h4>
-                                                <h5 class=" text-white" "><b id="lblPuntosPractica">Puntos: cargando...</b></h5>
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="row col-12 col-lg-6 justify-content-center mt-lg-5">
                             <div class="login-box">
 
                                 <!-- /.login-logo -->
@@ -203,11 +208,28 @@ if (!isset($_SESSION["loginEstudiante"])) {
                                 </div>
                             </div>
                         </div>
+
                     </div> 
 
                 </div>
 
+                <div class="modal fade" id="final-success">
+                    <div class="modal-dialog">
+                        <div class="modal-content bg-success">
+                            <div class="modal-header">
+                                <h4 class="modal-title align-content-center">Has finalizado la prueba diagnostica</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Muchas gracias por participar en la prueba diagnostica.<br>Ya puedes iniciar la primera fase y sumar puntos para tu sede.</p>
+                            </div>
 
+                        </div>
+                        <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>
             </div>
 
 
@@ -230,53 +252,53 @@ if (!isset($_SESSION["loginEstudiante"])) {
         <!-- jQuery -->
         <script src="View/Public/plugins/jquery/jquery.min.js"></script>
         <!-- Bootstrap 4 -->
-
         <script src="View/Public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
         <!-- AdminLTE App -->
         <script src="View/Public/dist/js/adminlte.min.js"></script>
-        <script src="https://unpkg.com/konva@7.2.2/konva.min.js"></script>
+        <script src="https://unpkg.com/konva@7.2.2/konva.min.js"></script>        
+        <script src="View/Public/plugins/moment/moment.min.js"></script>
 
-
+        <script src="View/Public/plugins/moment/moment-timezone-with-data.js"></script>
         <script>
 
-
-            var estaJugando = false;
+            var estaJugando = true;
             var estaRuleta = false;
             var tablaNumeros = [];
             var numeros = [];
             var signosArreglo = [];
+
             var numeroElegido = -1;
+            var numerosSeleccionadosProfe = [-1, -1, -1, -1];
+
+
+            var tiempo = 60 * 20;
+            var contador = 0;
+
+            var fechaFin = null;
+            var imgDados = [];
+            var imgLetra = [];
             $(() => {
                 let interval = setInterval(() => {
                     $.post("POST/ActualizarEstado", {actualizar: true}, (r) => {
+
                         if (r.exito != undefined && !r.exito) {
-                            document.location = "Inicio"
+                            document.location = "Inicio";
                         }
-                    }, "json");
+                    });
                 }, 5000);
 
                 interval;
+                var serverDate;
+                var serverOffset;
+                $.get("GET/Time", function (data) {
+                    // server returns a json object with a date property.
+                    serverDate = data.date * 1000;
+                    serverOffset = moment(serverDate).tz("America/Bogota").diff(new Date());
+                }, "json");
 
-                function enviarPuntoSede(correcta) {
-                    $.post("POST/PuntoSede", {punto: correcta}, (r) => {
-                        console.log(r);
-                        actualizarCastillo();
-                    });
+                function now() {
+                    return moment().tz("America/Bogota").add(serverOffset, 'milliseconds');
                 }
-
-                function actualizarCastillo() {
-                    $.get("GET/SedeEstudiante", (r) => {
-                        if (r.sede != undefined) {
-                            $("#lblCastilloPractica").html("Castillo " + r.sede["sede"]);
-                            $("#lblMisPuntos").html("Mi puntaje :" + r.sede["correcto"]);
-                            $("#lblPuntosPractica").html("Puntos " + r.sede["puntaje"]);
-                            $("#imgCastillo").prop("src", `View/Public/img/castillo${r.sede["id"]}.png`);
-
-
-                        }
-                    }, "json");
-                }
-                actualizarCastillo();
 
                 let llenarTabla = "";
                 for (let i = 0; i < 15; i++) {
@@ -284,132 +306,102 @@ if (!isset($_SESSION["loginEstudiante"])) {
                     let activo = i == 5 ? "activo" : "";
                     llenarTabla += `<div id="${(i + 1)}cuadrado" class="col-4 text-center p-3 numero ${activo}">
 
-                                <b >${(i + 1)}</b>
-                            </div>`;
+                            <b >${(i + 1)}</b>
+                        </div>`;
                 }
                 $("#container-numeros").html(llenarTabla);
 
-
-                function activarTabla() {
-                    let tiempo = 5;
-                    let contador = 0;
-                    setInterval(() => {
-
-
-                        if (estaJugando && estaRuleta) {
-                            contador += 250;
-                            tiempo += contador == 1000 ? -1 : 0;
-                            contador = contador == 1000 ? 0 : contador;
-                            let num = Math.floor((Math.random() * tablaNumeros.length - 1) + 2);
-                            let num2 = tablaNumeros[num - 1];
-                            $(".activo").removeClass("activo");
-                            $(`#${num2}cuadrado`).addClass("activo");
-                            let texto = tiempo > 0 ? `Empieza en <b>${tiempo}</b>` : `Debes llegar a : <b id="numeroLlegar">${num2}</b>`;
-                            $("#numeroLlegar").html(texto);
-                            numeroElegido = num - 1;
-                            /////////////////////////
-                            for (let i = 0; i < numeros.length; i++) {
-                                let d = Math.floor((Math.random() * 5) + 1);
-                                let imageletra = new Image();
-                                let imageDado = new Image();
-                                seleccionados[d]
-                                numeros[i].letra.letra = d;
-                                numeros[i].letra.image(imageletra);
-                                imageletra.src = `View/Public/img/${d}letra.png`;
-                                numeros[i].dado.image(imageDado);
-                                imageDado.src = `View/Public/img/${d}.png`;
-                                layer.batchDraw();
-
-                            }
-                            if (tiempo == 0) {
-                                tiempo = 5;
-                                pausarRuleta();
-                                $("html,body").animate({scrollTop: $("#banderaTablero").offset().top}, 1000);
-                            }
-
-
-                        }
-
-
-                    }, 250);
-                }
-                $("#btnPlay").on("click", () => {
-                    if (!estaJugando) {
-                        activarTabla();
-                        activeButton($("#btnPlay"), false);
-                        estaJugando = true;
-                        estaRuleta = true;
-                        $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
-
-                    }
-                });
-
-                $("#btnResponder").on("click", () => {
-
-                    if (estaJugando && !estaRuleta) {
-                        const expresionRegular= /(\({0,1}[1-6]{1}\){0,1}([+]|[-]|[\/]|[*])\({0,1}[1-6]{1}\){0,1})([+]|[-]|[\/]|[*])(\({0,1}[1-6]{1}\){0,1}([+]|[-]|[\/]|[*])\({0,1}[1-6]{1}\){0,1})/;
-                        if(!expresionRegular.test(getOperacion())){
-                             $(document).Toasts('create', {
-                                class: 'bg-danger',
-                                title: 'Ups !',
-                                body: 'Recuerda que debes utilizar todos los numeros'
-                            });
-                            return;
-                        }
-                        let resultado = validarOperacion();
-                        if (resultado == tablaNumeros[numeroElegido]) {
+                $("#btnEmpezarPrueba").on("click", (e) => {
+                    $.post("POST/IniciarDiagnostico", (r) => {
+                        if (r.exito != undefined && r.exito) {
                             $(document).Toasts('create', {
                                 class: 'bg-success',
-                                title: 'Muy bien !',
-                                body: 'Sumaste 1 punto a tu sede, sigue jugando!'
+                                title: 'Genial !',
+                                body: 'Acabas de iniciar tu prueba diagnostica. Tienes 20 minutos para hacerla.'
                             });
-
-                           // enviarPuntoSede(true);
-                            let activo = $(".activo");
-                            activo.removeClass("activo");
-                            activo.addClass("inactivo");
-                            tablaNumeros.splice(numeroElegido, 1)
-                            numeroElegido = -1;
-                            
-                            next();
-                            $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
-                        } else {
-                            $(document).Toasts('create', {
-                                class: 'bg-danger',
-                                title: 'Ups !',
-                                body: 'Respondiste erroneamente, intentalo de nuevo!'
-                            });
-                           // enviarPuntoSede(false);
-                            next();
-                            $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
+                            actualizarCampo();
+                            $("#btnEmpezarPrueba").prop("disabled", true);
+                            $("html,body").animate({scrollTop: $("#banderaTablero").offset().top}, 1000);
                         }
-                    }
+                    }, "json");
                 });
 
-                $("#btnSiguiente").on("click", () => {
-                    next();
-                   // enviarPuntoSede(false);
-                    $("html,body").animate({scrollTop: $("#banderaTabla").offset().top}, 1000);
+
+                function llegoNumero() {
+
+
+                    for (let i = 0; i < numeros.length; i++) {
+                        let d = numerosSeleccionadosProfe[i];
+//                        let imageletra = new Image();
+//                        let imageDado = new Image();
+                        numeros[i].letra.letra = d;
+                        numeros[i].letra.image(imgLetra[d]);
+//                        imageletra.src = `View/Public/img/${d}letra.png`;
+                        numeros[i].dado.image(imgDados[d]);
+//                        imageDado.src = `View/Public/img/${d}.png`;
+                        $(".activo").removeClass("activo");
+                        $(`#${d}cuadrado`).addClass("activo");
+                        layer.batchDraw();
+
+                        $(".activo").removeClass("activo");
+                        $(`#${numeroElegido}cuadrado`).addClass("activo");
+                        $("#numeroLlegar").html(`Debes llegar a : <b id="numeroLlegar">${numeroElegido}</b>`);
+                    }
+                }
+
+                $("#btnResponder").on("click", () => {
+                    if (!estaRuleta) {
+                        $.post("POST/RespuestaDiagnostico", getOperacion(), (r) => {
+                            console.log(r);
+                            if (r.error != undefined) {
+                                $(document).Toasts('create', {
+                                    class: 'bg-danger',
+                                    title: 'Ups !',
+                                    body: r.error
+                                });
+                            } else if (r.exito != undefined) {
+                                $(document).Toasts('create', {
+                                    class: 'bg-success',
+                                    title: 'Genial !',
+                                    body: 'Enviaste una respuesta, responde la siguiente!'
+                                });
+                                reiniciartablero();
+                                actualizarCampo();
+
+                            }
+                        }, "json");
+                    }
+
                 });
+
+
                 function next() {
                     if (estaJugando && !estaRuleta) {
                         estaRuleta = true;
-                        for (let i = 0; i < numeros.length; i++) {
-                            numeros[i].letra.draggable(false);
-                            reiniciarUbicacion(numeros[i].letra);
-                        }
-                        for (let i = 0; i < signosArreglo.length; i++) {
-                            signosArreglo[i].draggable(false);
-                            reiniciarUbicacion(signosArreglo[i]);
-                        }
-                        activeButton($("#btnSiguiente"), false);
+                        reiniciartablero();
+
                         activeButton($("#btnResponder"), false);
 
                     }
                 }
+
+                function reiniciartablero() {
+                    for (let i = 0; i < numeros.length; i++) {
+                        numeros[i].letra.draggable(false);
+                        reiniciarUbicacion(numeros[i].letra);
+                    }
+
+                    for (let i = 0; i < signosArreglo.length; i++) {
+                        signosArreglo[i].draggable(false);
+                        reiniciarUbicacion(signosArreglo[i]);
+                    }
+                    layer.batchDraw();
+                    layer.batchDraw();
+                    layer.batchDraw();
+                }
+
                 function pausarRuleta() {
                     estaRuleta = false;
-
                     for (let i = 0; i < numeros.length; i++) {
                         numeros[i].letra.draggable(true);
                         reiniciarUbicacion(numeros[i].letra);
@@ -419,9 +411,9 @@ if (!isset($_SESSION["loginEstudiante"])) {
                         reiniciarUbicacion(signosArreglo[i]);
 
                     }
-                    activeButton($("#btnSiguiente"), true);
                     activeButton($("#btnResponder"), true);
                 }
+
                 function reiniciarUbicacion(bichito) {
                     bichito.x(bichito.xIni);
                     bichito.y(bichito.yIni);
@@ -442,9 +434,89 @@ if (!isset($_SESSION["loginEstudiante"])) {
                     }
 
                 }
+
+                var cronometroInterval = null;
+                function  pasarSegundo() {
+                    return fechaFin !== null ? fechaFin.unix() - now().unix() : 0;
+                }
+                let cantidadResueltas = 0;
+                function actualizarCampo() {
+
+                    $.get("GET/CampoDiagnostico", (r) => {
+                        console.log(r);
+                        if (r.opcion != undefined) {
+                            switch (r.opcion) {
+                                case 4:
+                                    document.location = "Diagnostico";
+                                    break;
+                                case 3:
+                                    $('#final-success').modal({
+                                        keyboard: false
+                                    });
+                                    setTimeout(() => {
+                                        document.location = "Inicio";
+                                    }, 4000)
+
+                                    break;
+                                case 1:
+                                    document.location = "Inicio";
+                                    break;
+                                case 2:
+                                    $("#btnEmpezarPrueba").prop("disabled", false);
+
+                                    break;
+                                case 5:
+                                    numerosSeleccionadosProfe = [r.pregunta.dadouno, r.pregunta.dadodos, r.pregunta.dadotres, r.pregunta.dadocuatro];
+                                    numeroElegido = r.pregunta.numero;
+                                    $("#numeroPregunta").html(`<b>Pregunta #${r.pregunta.numeroPregunta}</b>`)
+                                    llegoNumero();
+                                    pausarRuleta();
+                                    $("#btnResponder").prop("disabled", false);
+                                    if (cronometroInterval == null) {
+                                        fechaFin = moment(r.pregunta.fechafin, "YYYY-MM-DD hh:mm:ss");
+                                        cronometroInterval = setInterval(() => {
+                                            if (pasarSegundo() + 2 <= 0) {
+                                                $('#final-success').modal({
+                                                    keyboard: false
+                                                });
+                                                setTimeout(() => {
+                                                    document.location = "Inicio";
+                                                }, 4000)
+                                                clearInterval(cronometroInterval);
+                                                cronometroInterval = null;
+                                            } else {
+                                                $("#numeroLlegar").html(`Debes llegar a : <b id="numeroLlegar">${numeroElegido}</b><br><span><b>Tiempo Restante : ${pasarSegundo() + 2}</b></span>`)
+                                            }
+                                        }, 500)
+                                    }
+                                    break;
+                            }
+
+                        }
+
+                    }, "json");
+
+                }
+                actualizarCampo();
+
             });
 
-
+            for (let i = 1; i < 7; i++) {
+                let dado = new Image();
+                dado.src = `View/Public/img/${i}.png`;
+                imgDados[i] = dado;
+            }
+            let dado = new Image();
+            dado.src = `View/Public/img/-1.png`;
+            imgDados[0] = dado;
+            for (let i = 1; i < 7; i++) {
+                let letra = new Image();
+                letra.src = `View/Public/img/${i}letra.png`;
+                imgLetra[i] = letra;
+            }
+            let letra = new Image();
+            letra.src = `View/Public/img/-1letra.png`;
+            imgLetra[0] = letra;
             var numerosSeleccionados = {1: -1, 2: -1, 3: -1, 4: -1};
             var arregloCuadrados = {};
             var cuadroLetra = null;
@@ -533,51 +605,48 @@ if (!isset($_SESSION["loginEstudiante"])) {
             function letras(i, letra, layer) {
                 let wIni = 40;
                 let hIni = 40;
-                let signo = new Image();
-                signo.onload = () => {
-                    let xinicial = 60 + (i * 50) + (25 * i);
-                    let signo2 = new Konva.Image({
-                        x: xinicial,
-                        y: 260,
-                        image: signo,
-                        width: wIni,
-                        height: hIni, draggable: false, name: "letra"
-                    });
-                    signo2.wIni = wIni;
-                    signo2.hIni = hIni;
-                    signo2.xIni = xinicial;
-                    signo2.yIni = 260;
-                    signo2.letra = letra;
-                    numeros[i] = {letra: signo2, dado: null};
-                    signo2.on('mouseup touchend', function () {
-                        console.log("hola " + i);
-                    });
-                    signo2.on('dragend', () => {
-                        if (cuadroLetra != null) {
-                            signo2.height(cuadroLetra.height() - 8);
-                            signo2.width(cuadroLetra.width() - 8);
-                            signo2.x(cuadroLetra.x() + 3);
-                            signo2.y(cuadroLetra.y() + 3);
-                            cuadroLetra.fill("white");
-                            for (let key in arregloCuadrados) {
-                                if (arregloCuadrados[key] === cuadroLetra) {
-                                    seleccionados[key] = {cuadrado: cuadroLetra, signo: signo2, caracter: signo2.letra};
-                                    break;
-                                }
-                            }
 
-                            cuadroLetra = null;
-                        } else {
-                            signo2.height(hIni);
-                            signo2.width(wIni);
-                            signo2.x(xinicial)
-                            signo2.y(260)
+                let xinicial = 60 + (i * 50) + (25 * i);
+                let signo2 = new Konva.Image({
+                    x: xinicial,
+                    y: 260,
+                    image: imgLetra[letra == -1 ? 0 : letra],
+                    width: wIni,
+                    height: hIni, draggable: false, name: "letra"
+                });
+                signo2.wIni = wIni;
+                signo2.hIni = hIni;
+                signo2.xIni = xinicial;
+                signo2.yIni = 260;
+                signo2.letra = letra;
+                numeros[i] = {letra: signo2, dado: null};
+                signo2.on('mouseup touchend', function () {
+                    console.log("hola " + i);
+                });
+                signo2.on('dragend', () => {
+                    if (cuadroLetra != null) {
+                        signo2.height(cuadroLetra.height() - 8);
+                        signo2.width(cuadroLetra.width() - 8);
+                        signo2.x(cuadroLetra.x() + 3);
+                        signo2.y(cuadroLetra.y() + 3);
+                        cuadroLetra.fill("white");
+                        for (let key in arregloCuadrados) {
+                            if (arregloCuadrados[key] === cuadroLetra) {
+                                seleccionados[key] = {cuadrado: cuadroLetra, signo: signo2, caracter: signo2.letra};
+                                break;
+                            }
                         }
-                    });
-                    layer.add(signo2);
-                    layer.batchDraw();
-                };
-                signo.src = `View/Public/img/${letra}letra.png`;
+
+                        cuadroLetra = null;
+                    } else {
+                        signo2.height(hIni);
+                        signo2.width(wIni);
+                        signo2.x(xinicial)
+                        signo2.y(260)
+                    }
+                });
+                layer.add(signo2);
+                layer.batchDraw();
             }
 
             for (let key in numerosSeleccionados) {
@@ -589,91 +658,93 @@ if (!isset($_SESSION["loginEstudiante"])) {
                 let wIni = 45;
                 let hIni = 45;
                 signo.onload = () => {
-                    let signo2 = new Konva.Image({
-                        x: posicion,
-                        y: 320,
-                        image: signo,
-                        width: wIni,
-                        height: hIni, draggable: false, name: nombre
-                    });
-                    signo2.wIni = wIni;
-                    signo2.hIni = hIni;
-                    signo2.xIni = posicion;
-                    signo2.yIni = 320;
-                    signosArreglo[signosArreglo.length] = signo2;
-                    signo2.on('dragend', function () {
-                        let nameSigno = signo2.name();
-                        switch (nameSigno) {
-                            case "parentesisderecho":
-                                if (CuadroSignoDerecho != null) {
-                                    signo2.x(CuadroSignoDerecho.x() - 20);
-                                    signo2.y(CuadroSignoDerecho.y() - 10);
-                                    signo2.height(hIni + 13);
-                                    CuadroSignoDerecho.fill("white");
-                                    for (let key in arregloCuadrados) {
-                                        if (arregloCuadrados[key] === CuadroSignoDerecho) {
-                                            seleccionados[key] = {cuadrado: CuadroSignoDerecho, signo: signo2, caracter: ")"};
-                                            break;
-                                        }
-                                    }
-                                    CuadroSignoDerecho = null;
-                                } else {
-                                    signo2.x(posicion);
-                                    signo2.y(320);
-                                    signo2.width(wIni);
-                                    signo2.height(hIni);
-                                }
-                                break;
-                            case"parentesisizquierdo":
-                                if (CuadroSignoIzquierdo != null) {
-                                    signo2.x(CuadroSignoIzquierdo.x() - 14);
-                                    signo2.y(CuadroSignoIzquierdo.y() - 10);
-                                    signo2.height(hIni + 13);
-                                    CuadroSignoIzquierdo.fill("white");
-                                    for (let key in arregloCuadrados) {
-                                        if (arregloCuadrados[key] === CuadroSignoIzquierdo) {
-                                            seleccionados[key] = {cuadrado: CuadroSignoIzquierdo, signo: signo2, caracter: "("};
-                                            break;
-                                        }
-                                    }
-                                    CuadroSignoIzquierdo = null;
-                                } else {
-                                    signo2.x(posicion);
-                                    signo2.y(320);
-                                    signo2.width(wIni);
-                                    signo2.height(hIni);
-                                }
-                                break;
-                            default:
-                                if (cuadroSigno != null) {
-                                    signo2.x(cuadroSigno.x());
-                                    signo2.y(cuadroSigno.y());
-                                    signo2.width(cuadroSigno.width());
-                                    signo2.height(cuadroSigno.height());
-
-                                    for (let key in arregloCuadrados) {
-                                        if (arregloCuadrados[key] === cuadroSigno) {
-
-                                            seleccionados[key] = {cuadrado: cuadroSigno, signo: signo2, caracter: convertirCaracter(nameSigno)};
-                                            break;
-                                        }
-                                    }
-                                    cuadroSigno.fill("white");
-                                    cuadroSigno = null;
-                                } else {
-                                    signo2.x(posicion);
-                                    signo2.y(320);
-                                    signo2.width(wIni);
-                                    signo2.height(hIni);
-                                }
-
-                                break;
-                        }
-                    });
-                    layer.add(signo2);
-                    layer.batchDraw();
                 };
                 signo.src = `View/Public/img/${nombre}.png`;
+
+                let signo2 = new Konva.Image({
+                    x: posicion,
+                    y: 320,
+                    image: signo,
+                    width: wIni,
+                    height: hIni, draggable: false, name: nombre
+                });
+                signo2.wIni = wIni;
+                signo2.hIni = hIni;
+                signo2.xIni = posicion;
+                signo2.yIni = 320;
+                signo2.nombre = nombre;
+                signosArreglo[signosArreglo.length] = signo2;
+                signo2.on('dragend', function () {
+                    let nameSigno = signo2.name();
+                    switch (nameSigno) {
+                        case "parentesisderecho":
+                            if (CuadroSignoDerecho != null) {
+                                signo2.x(CuadroSignoDerecho.x() - 20);
+                                signo2.y(CuadroSignoDerecho.y() - 10);
+                                signo2.height(hIni + 13);
+                                CuadroSignoDerecho.fill("white");
+                                for (let key in arregloCuadrados) {
+                                    if (arregloCuadrados[key] === CuadroSignoDerecho) {
+                                        seleccionados[key] = {cuadrado: CuadroSignoDerecho, signo: signo2, caracter: ")"};
+                                        break;
+                                    }
+                                }
+                                CuadroSignoDerecho = null;
+                            } else {
+                                signo2.x(posicion);
+                                signo2.y(320);
+                                signo2.width(wIni);
+                                signo2.height(hIni);
+                            }
+                            break;
+                        case"parentesisizquierdo":
+                            if (CuadroSignoIzquierdo != null) {
+                                signo2.x(CuadroSignoIzquierdo.x() - 14);
+                                signo2.y(CuadroSignoIzquierdo.y() - 10);
+                                signo2.height(hIni + 13);
+                                CuadroSignoIzquierdo.fill("white");
+                                for (let key in arregloCuadrados) {
+                                    if (arregloCuadrados[key] === CuadroSignoIzquierdo) {
+                                        seleccionados[key] = {cuadrado: CuadroSignoIzquierdo, signo: signo2, caracter: "("};
+                                        break;
+                                    }
+                                }
+                                CuadroSignoIzquierdo = null;
+                            } else {
+                                signo2.x(posicion);
+                                signo2.y(320);
+                                signo2.width(wIni);
+                                signo2.height(hIni);
+                            }
+                            break;
+                        default:
+                            if (cuadroSigno != null) {
+                                signo2.x(cuadroSigno.x());
+                                signo2.y(cuadroSigno.y());
+                                signo2.width(cuadroSigno.width());
+                                signo2.height(cuadroSigno.height());
+
+                                for (let key in arregloCuadrados) {
+                                    if (arregloCuadrados[key] === cuadroSigno) {
+
+                                        seleccionados[key] = {cuadrado: cuadroSigno, signo: signo2, caracter: convertirCaracter(nameSigno)};
+                                        break;
+                                    }
+                                }
+                                cuadroSigno.fill("white");
+                                cuadroSigno = null;
+                            } else {
+                                signo2.x(posicion);
+                                signo2.y(320);
+                                signo2.width(wIni);
+                                signo2.height(hIni);
+                            }
+
+                            break;
+                    }
+                });
+                layer.add(signo2);
+                layer.batchDraw();
             }
             function convertirCaracter(signo) {
                 let caracter = "";
@@ -696,28 +767,30 @@ if (!isset($_SESSION["loginEstudiante"])) {
 
             }
             signos("suma", layer, 50);
-            signos("multiplicacion", layer, 110);
-            signos("resta", layer, 170);
-            signos("division", layer, 230);
-            signos("parentesisizquierdo", layer, 280);
-            signos("parentesisderecho", layer, 310);
+            signos("suma", layer, 50);
             signos("suma", layer, 50);
             signos("multiplicacion", layer, 110);
-            signos("resta", layer, 170);
-            signos("division", layer, 230);
-            signos("parentesisizquierdo", layer, 280);
-            signos("parentesisderecho", layer, 310);
-            signos("suma", layer, 50);
+            signos("multiplicacion", layer, 110);
             signos("multiplicacion", layer, 110);
             signos("resta", layer, 170);
+            signos("resta", layer, 170);
+            signos("resta", layer, 170);
             signos("division", layer, 230);
+            signos("division", layer, 230);
+            signos("division", layer, 230);
+            signos("parentesisderecho", layer, 310);
+            signos("parentesisderecho", layer, 310);
+            signos("parentesisizquierdo", layer, 280);
+            signos("parentesisizquierdo", layer, 280);
+
+
             function dados(i, layer, numero) {
                 let dado = new Image();
                 dado.onload = function () {
                     var dado1 = new Konva.Image({
                         x: 35 + (i * 90),
                         y: 40,
-                        image: dado,
+                        image: imgDados[numero == -1 ? 0 : numero],
                         width: 55,
                         height: 55, name: "dado"
                     });
@@ -895,10 +968,14 @@ if (!isset($_SESSION["loginEstudiante"])) {
             });
             function getOperacion() {
                 let operacion = "";
+                let numeros = [];
                 for (let key in seleccionados) {
                     operacion += seleccionados[key].caracter;
+                    if (!isNaN(seleccionados[key].caracter)) {
+                        numeros[numeros.length] = seleccionados[key].caracter;
+                    }
                 }
-                return operacion == "" ? "0+0" : operacion;
+                return operacion == "" ? {operacion: "0+0", numerouno: 0, numerodos: 0, numerotres: 0, numerocuatro: 0} : {operacion: operacion, numerouno: numeros[0], numerodos: numeros[1], numerotres: numeros[2], numerocuatro: numeros[3]};
             }
 
             function validarOperacion() {
@@ -933,3 +1010,4 @@ if (!isset($_SESSION["loginEstudiante"])) {
         </script>
     </body>
 </html>
+

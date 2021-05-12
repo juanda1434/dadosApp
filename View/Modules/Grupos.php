@@ -146,10 +146,14 @@
                                         
                                         <div class="row col-12 col-lg-3">
                                             <div class="col-12">
-                                                <a href="#" id="btnExcelNoParticipanPractica" class="btn btn-success "><li class="fas fa-save"> </li> Excel no participan practica</a>
+                                                <a  href="#" id="btnExcelNoParticipanPractica" class="btn btn-success "><li class="fas fa-save"> </li> Excel no participan practica</a>
                                             </div>
                                         </div>
-                                        
+                                        <div class="row col-12 col-lg-3">
+                                            <div class="col-12">
+                                                <a href="#" id="btnExcelDiagnosticoProcesado" class="btn btn-success "><li class="fas fa-save"> </li> Excel diagnostico procesado</a>
+                                            </div>
+                                        </div>
                                         
                                     </div>
                                     <!-- /.card-body -->
@@ -305,6 +309,7 @@ var dataExcel = {};
                                 });
                 });
             }
+           
 const generarExcelNoParticipanPractica = () => {
                 fetch('GET/PdfNoParticipa')
                         .then(r => {
@@ -322,7 +327,23 @@ const generarExcelNoParticipanPractica = () => {
                                 });
                 });
             }
+const generarExcelDiagnosticosProcesados = () => {
+                fetch('GET/ExlDiagnostico')
+                        .then(r => {
 
+                            return r.json();
+                        }).then(d => {
+                            dataExcel=d;
+                    downloadAsExcel();
+                    
+                }).catch((e)=>{
+                    $(document).Toasts('create', {
+                                    class: 'bg-danger',
+                                    title: 'Error del sistema !',
+                                    body: "Error al generar el archivo excel."
+                                });
+                });
+            }
 
 
             $(() => {
@@ -336,6 +357,7 @@ const generarExcelNoParticipanPractica = () => {
                 document.getElementById("btnExcelParticipantePractica6").onclick= (e)=>{generarExcelParticipantesPractica(e)};
                 document.getElementById("btnExcelParticipantePractica7").onclick= (e)=>{generarExcelParticipantesPractica(e)};
                 document.getElementById("btnExcelNoParticipanPractica").onclick= generarExcelNoParticipanPractica;
+                document.getElementById("btnExcelDiagnosticoProcesado").onclick= generarExcelDiagnosticosProcesados;
                 function botones(estado, codigo, key) {
                     let btns = "";
                     switch (estado) {
@@ -448,7 +470,9 @@ const generarExcelNoParticipanPractica = () => {
                 
                 function onNuevaRonda(key,codigo) {
                     $("#tbodyGrupos").off("click", ("#btnNewRonda-" + key));
+                   
                     $("#tbodyGrupos").on("click", ("#btnNewRonda-" + key), (e) => {  
+                         console.log(codigo);
                         e.preventDefault();
                         $.ajax({
                             url: "POST/NuevaRonda",

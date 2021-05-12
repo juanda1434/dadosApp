@@ -5,6 +5,7 @@ class ControllerGET {
     public function __construct() {
         
     }
+
     public function validarDiagnostico() {
         require_once RAIZ . '/Model/Business.php';
         return (new Business())->validarEnDiagnostico();
@@ -146,9 +147,15 @@ class ControllerGET {
         require_once RAIZ . '/Model/Business.php';
         return (new Business())->getListaEstudiantesParticipantes($filter);
     }
+
     public function getListaEstudiantesNoParticipantes() {
         require_once RAIZ . '/Model/Business.php';
         return (new Business())->getListaEstudiantesNoParticipantes();
+    }
+
+    public function getListaDiagnosticosProcesados() {
+        require_once RAIZ . '/Model/Business.php';
+        return (new Business())->getListaDiagnosticosProcesados();
     }
 
 }

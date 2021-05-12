@@ -19,6 +19,10 @@ class Business {
         return $value;
     }
 
+    public function getListaDiagnosticosProcesados() {
+           require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
+        return (new EstudianteDAO())->getListaDiagnosticosProcesados();     
+    }
     public function getListaEstudiantesParticipantes($filter) {
         require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
         return (new EstudianteDAO())->getListaEstudiantesParticipantes($filter);

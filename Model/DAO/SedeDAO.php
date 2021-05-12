@@ -45,7 +45,7 @@ class SedeDAO {
         $id = $estudianteDTO->getIdEstudiante();
         $sedes = [];
         try {
-            $stmGetSedes = $this->conexion->prepare("select  SUM(if(puntajesede.correcto,1,0)) correcto,sede.idsede,sede.nombre,sede.puntaje from sede inner join estudiante on estudiante.idsede=sede.idsede INNER JOIN puntajesede on puntajesede.idestudiante=estudiante.idestudiante where estudiante.idestudiante=:idestudiante");
+            $stmGetSedes = $this->conexion->prepare("select  if(SUM(if(puntajesede.correcto,1,0)) is null,0,SUM(if(puntajesede.correcto,1,0))) correcto,sede.idsede,sede.nombre,sede.puntaje from sede inner join estudiante on estudiante.idsede=sede.idsede INNER JOIN puntajesede on puntajesede.idestudiante=estudiante.idestudiante where estudiante.idestudiante=:idestudiante");
             $stmGetSedes->bindParam(":idestudiante", $id, PDO::PARAM_INT);
             if ($stmGetSedes->execute() && $stmGetSedes->rowCount() > 0) {
                 $sedesSQL = $stmGetSedes->fetch();

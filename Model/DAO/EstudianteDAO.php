@@ -156,16 +156,16 @@ class EstudianteDAO {
 
     public function getListaEstudiantesParticipantes($filter) {
         $estos = [];
-        $dias = [["2021-05-03 05:00:00","2021-05-09 22:00:00"],["2021-05-03 05:00:00","2021-05-04 11:50:00"],["2021-05-04 11:51:00","2021-05-04 21:30:00"],["2021-05-05 05:00:00","2021-05-05 21:00:00"],["2021-05-06 05:00:00","2021-05-06 21:00:00"],["2021-05-07 05:00:00","2021-05-07 21:00:00"],["2021-05-08 05:00:00","2021-05-08 21:00:00"],["2021-05-09 05:00:00","2021-05-09 21:00:00"]];
-        $fecha1=($dias[$filter])[0];
-        $fecha2=($dias[$filter])[1];
+        $dias = [["2021-05-03 05:00:00", "2021-05-10 22:00:00"], ["2021-05-03 05:00:00", "2021-05-04 11:50:00"], ["2021-05-04 11:51:00", "2021-05-05 05:00:00"], ["2021-05-05 05:00:00", "2021-05-06 05:00:00"], ["2021-05-06 05:00:00", "2021-05-07 05:00:00"], ["2021-05-07 05:00:00", "2021-05-08 05:00:00"], ["2021-05-08 05:00:00", "2021-05-09 05:00:00"], ["2021-05-09 05:00:00", "2021-05-10 22:00:00"]];
+        $fecha1 = ($dias[$filter])[0];
+        $fecha2 = ($dias[$filter])[1];
         try {
             $stm = $this->conexion->prepare("select e.nombre,SUM(if(puntajesede.correcto,0,1)) incorrecto,SUM(if(puntajesede.correcto,1,0)) correcto,s.nombre sede from puntajesede INNER JOIN estudiante e on e.idestudiante=puntajesede.idestudiante inner join sede s on s.idsede=puntajesede.idsede WHERE puntajesede.fecharegistro BETWEEN '$fecha1' and '$fecha2' GROUP BY puntajesede.idestudiante ORDER by s.idsede,correcto desc,incorrecto asc");
             if ($stm->execute() && $stm->rowCount() > 0) {
                 $estus = $stm->fetchAll();
 
                 foreach ($estus as $value) {
-                    $estos[] = ["nombre" => $value["nombre"], "correctas" => $value["correcto"],"incorrectas" => $value["incorrecto"], "sede" => $value["sede"]];
+                    $estos[] = ["nombre" => $value["nombre"], "correctas" => $value["correcto"], "incorrectas" => $value["incorrecto"], "sede" => $value["sede"]];
                 }
             }
         } catch (Exception $ex) {
@@ -182,7 +182,7 @@ class EstudianteDAO {
                 $estus = $stm->fetchAll();
 
                 foreach ($estus as $value) {
-                    $estos[] = ["nombre" => $value["nombre"], "sede" => $value["sede"],"diagnostico" => $value["diagnostico"]];
+                    $estos[] = ["nombre" => $value["nombre"], "sede" => $value["sede"], "diagnostico" => $value["diagnostico"]];
                 }
             }
         } catch (Exception $ex) {
@@ -190,4 +190,31 @@ class EstudianteDAO {
         }
         return $estos;
     }
+
+    public function getListaDiagnosticosProcesados() {
+        $diagnosticos=[];
+        try {
+            $sql = "select e.nombre,s.nombre sede,SUM(if(dp.correcta and not d.fechainicio is null,1,0))correcta,sum(if(not dp.correcta and not dp.fechafin is null,1,0))incorrecta,sum(if(dp.fechafin is null,1,0))sincontestar,sum(if(not dp.fechafin is null,unix_timestamp(dp.fechafin)-unix_timestamp(dp.fechainicio),0))/(10-sum(if(dp.fechafin is null,1,0)))tiempoprom,GROUP_CONCAT(if(dp.correcta,'correcta',if(not dp.correcta,'incorrecta','sin contestar')) ORDER BY dp.idpreguntabase SEPARATOR '-')preguntas,GROUP_CONCAT(if(not dp.fechafin is null,unix_timestamp(dp.fechafin)-unix_timestamp(dp.fechainicio),0) ORDER BY dp.idpreguntabase SEPARATOR '-')tiempo FROM diagnostico d INNER JOIN diagnosticopregunta dp on d.iddiagnostico=dp.iddiagnostico INNER JOIN estudiante e on e.idestudiante=d.idestudiante INNER join sede s on s.idsede=e.idsede where not d.fechainicio is null GROUP BY d.iddiagnostico order by s.idsede,correcta desc,incorrecta desc";
+            $stm = $this->conexion->prepare($sql);
+            if ($stm->execute() && $stm->rowCount() > 0) {
+                $diagnosticosSQL = $stm->fetchAll();
+                $diagnosticos=array_map(array($this,"procesarDiagnosticos"), $diagnosticosSQL);
+            }
+        } catch (Exception $ex) {
+            
+        }
+        return $diagnosticos;
+    }
+
+      function procesarDiagnosticos($diagnostico) {
+        $diagnosticoNuevo = ["nombre" => $diagnostico["nombre"],"sede"=>$diagnostico["sede"] ,"correctas" => $diagnostico["correcta"], "incorrectas" => $diagnostico["incorrecta"], "sin contestar" => $diagnostico["sincontestar"], "tiempo avg" => $diagnostico["tiempoprom"]];
+        $preguntas = explode("-", $diagnostico["preguntas"]);
+        $tiempos = explode("-", $diagnostico["tiempo"]);
+        for ($i = 0; $i < count($preguntas); $i++) {
+            $diagnosticoNuevo["pregunta" . ($i+1)] = $preguntas[$i];
+            $diagnosticoNuevo["tiempo" . ($i+1)] = $tiempos[$i];
+        }
+        return $diagnosticoNuevo;
+    }
+
 }

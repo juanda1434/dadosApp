@@ -170,7 +170,7 @@ $codigo=$partidoDTO->getCodigo();
         $codigoPartido = $partidoDTO->getCodigo();
         try {
             $this->conexion->beginTransaction();
-            $stmGetPartidoInactivo = $this->conexion->prepare("select p.idpartido from partido p  where if(not p.finalizado,if(not p.enjuego and not p.estaactivo,'Registro',if(p.enjuego and not p.estaactivo,'Pausa',if(p.estaactivo and not p.enjuego,'Siguiente','Jugando'))),'Finalizado')='Registro' and p.codigo");
+            $stmGetPartidoInactivo = $this->conexion->prepare("select p.idpartido from partido p  where if(not p.finalizado,if(not p.enjuego and not p.estaactivo,'Registro',if(p.enjuego and not p.estaactivo,'Pausa',if(p.estaactivo and not p.enjuego,'Siguiente','Jugando'))),'Finalizado')='Registro' and p.codigo=:codigo");
             $stmGetPartidoInactivo->bindParam(":codigo", $codigoPartido, PDO::PARAM_INT);
             if ($stmGetPartidoInactivo->execute() && $stmGetPartidoInactivo->rowCount() > 0) {
                 $idPartido = $stmGetPartidoInactivo->fetch()["idpartido"];
@@ -201,7 +201,7 @@ $codigo=$partidoDTO->getCodigo();
         $codigoPartido = $partidoDTO->getCodigo();
         try {
             $this->conexion->beginTransaction();
-            $stmGetPartidoInactivo = $this->conexion->prepare("select p.idpartido from partido p  where if(not p.finalizado,if(not p.enjuego and not p.estaactivo,'Registro',if(p.enjuego and not p.estaactivo,'Pausa',if(p.estaactivo and not p.enjuego,'Siguiente','Jugando'))),'Finalizado')='Pausa' and p.codigo");
+            $stmGetPartidoInactivo = $this->conexion->prepare("select p.idpartido from partido p  where if(not p.finalizado,if(not p.enjuego and not p.estaactivo,'Registro',if(p.enjuego and not p.estaactivo,'Pausa',if(p.estaactivo and not p.enjuego,'Siguiente','Jugando'))),'Finalizado')='Pausa' and p.codigo=:codigo");
             $stmGetPartidoInactivo->bindParam(":codigo", $codigoPartido, PDO::PARAM_INT);
             if ($stmGetPartidoInactivo->execute() && $stmGetPartidoInactivo->rowCount() > 0) {
                 $idPartido = $stmGetPartidoInactivo->fetch()["idpartido"];
@@ -441,7 +441,7 @@ $codigo=$partidoDTO->getCodigo();
         $exito = false;
         $codigo = $partidoDTO->getCodigo();
         try {
-            $stmGetPartidoActivo = $this->conexion->prepare("select p.idpartido from partido p where if(not p.finalizado,if(not p.enjuego and not p.estaactivo,'Registro',if(p.enjuego and not p.estaactivo,'Pausa',if(p.estaactivo and not p.enjuego,'Siguiente','Jugando'))),'Finalizado')='Pausa'");
+            $stmGetPartidoActivo = $this->conexion->prepare("select p.idpartido from partido p where if(not p.finalizado,if(not p.enjuego and not p.estaactivo,'Registro',if(p.enjuego and not p.estaactivo,'Pausa',if(p.estaactivo and not p.enjuego,'Siguiente','Jugando'))),'Finalizado')='Pausa' and codigo=:codigo");
             $stmGetPartidoActivo->bindParam(":codigo", $codigo, PDO::PARAM_INT);
             if ($stmGetPartidoActivo->execute() && $stmGetPartidoActivo->rowCount() > 0) {
                 $partidoDTO->setIdPartido($stmGetPartidoActivo->fetch()["idpartido"]);
