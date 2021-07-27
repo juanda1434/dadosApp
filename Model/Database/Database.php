@@ -19,15 +19,7 @@ class Database {
         $baseDatos="dados";
         $host="localhost";
         
-//         $usuario="id16327139_sucesora";
-//        $contrasenia="D9a1oo30____";
-//        $baseDatos="id16327139_dadosprimaria22";
-//        $host="localhost";
-        
-//        $usuario="u603952219_iesapostoles";
-//        $contrasenia="Santosapostoles1494";
-//        $baseDatos="u603952219_dadosprimaria";
-//        $host="localhost";
+
        $link = new PDO("mysql:host=$host;dbname=$baseDatos",$usuario,$contrasenia);
       $link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
        return $link;

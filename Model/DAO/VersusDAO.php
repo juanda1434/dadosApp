@@ -76,7 +76,7 @@ class VersusDAO {
                 $id2 = $enfrentamientos["id2"];
                 $r1 = $enfrentamientos["r1"];
                 $r2 = $enfrentamientos["r2"];
-                $enfrentamientos = ["idregistro"=>$p1 > $p2 ? $r1 : $r2,"idpartido"=>$enfrentamientos["idpartido"],"ronda" => $enfrentamientos["ronda"], "numero" => $enfrentamientos["numero"], "id" => $p1 > $p2 ? $id1 : $id2, "puntaje" => $p1 > $p2 ? $p1 : $p2];
+                $enfrentamientos = ["idregistro" => $p1 > $p2 ? $r1 : $r2, "idpartido" => $enfrentamientos["idpartido"], "ronda" => $enfrentamientos["ronda"], "numero" => $enfrentamientos["numero"], "id" => $p1 > $p2 ? $id1 : $id2, "puntaje" => $p1 > $p2 ? $p1 : $p2];
                 $exito = ["exito" => true, "enfrentamiento" => $enfrentamientos];
             }
         } catch (Exception $ex) {
@@ -85,6 +85,52 @@ class VersusDAO {
         return $exito;
     }
 
+    public function seleccionarGanador(VersusDTO $versusDTO): array {
+        $exito = [];
+        $idVersus = $versusDTO->getIdVersus();
+        $codigo = (($versusDTO->getEnfrentamientoDTO())->getPartidoDTO())->getCodigo();
+        try {
+            $this->conexion->beginTransaction();
+            $stmSetWinner = $this->conexion->prepare("update enfrentamiento INNER JOIN versus on versus.idenfrentamiento=enfrentamiento.idenfrentamiento set enfrentamiento.puntaje=2 where versus.idversus=:idversus");
+            $stmSetWinner->bindParam(":idversus", $idVersus, PDO::PARAM_INT);
+            if (!$stmSetWinner->execute()) {
+                throw new Exception("Error al seleccionar ganador: dar puntos al ganador.");
+            }
+            $idLoser = $idVersus == "1" ? 2 : 1;
+            $stmSetLoser = $this->conexion->prepare("update enfrentamiento INNER JOIN versus on versus.idenfrentamiento=enfrentamiento.idenfrentamiento set enfrentamiento.puntaje=0 where versus.idversus=:idversus");
+            $stmSetLoser->bindParam(":idversus", $idLoser, PDO::PARAM_INT);
+            if (!$stmSetLoser->execute()) {
+                throw new Exception("Error al seleccionar perdedor: dar puntos al ganador.");
+            }
+            $stmValidarTerminar = $this->conexion->prepare("select enfrentamiento.idenfrentamiento,enfrentamiento.idregistro,enfrentamiento.idpartido,enfrentamiento.numero,enfrentamiento.ronda,enfrentamiento.puntaje from enfrentamiento INNER JOIN versus on versus.idenfrentamiento=enfrentamiento.idenfrentamiento INNER JOIN partido on partido.idpartido=enfrentamiento.idpartido WHERE versus.idversus=:idversus and partido.codigo=:codigo");
+            $stmValidarTerminar->bindParam(":idversus", $idVersus, PDO::PARAM_INT);
+            $stmValidarTerminar->bindParam(":codigo", $codigo, PDO::PARAM_STR);
+
+            if (!$stmValidarTerminar->execute() || $stmValidarTerminar->rowCount() <= 0) {
+                throw new Exception("Error al seleccionar ganador : seleccionar ganador");
+            }
+            $enfrentamientos = $stmValidarTerminar->fetch();
+            $enfrentamientos = ["idregistro" => $enfrentamientos["idregistro"], "idpartido" => $enfrentamientos["idpartido"], "ronda" => $enfrentamientos["ronda"], "numero" => $enfrentamientos["numero"], "id" => $enfrentamientos["idenfrentamiento"], "puntaje" => $enfrentamientos["puntaje"]];
+
+            $exito = $this->conexion->commit() ? $enfrentamientos : [];
+        } catch (Exception $ex) {
+            $this->conexion->rollBack();
+            throw new Exception($ex->getMessage());
+        }
+        return $exito;
+    }
     
-    
+    public function deseleccionarEnfrentamiento(VersusDTO $versusDTO):bool {
+        $codigo = (($versusDTO->getEnfrentamientoDTO())->getPartidoDTO())->getCodigo();
+        $exito=false;
+        try {
+            $stmSet=$this->conexion->prepare("update versus v inner join enfrentamiento e on e.idenfrentamiento=v.idenfrentamiento inner join partido p on p.idpartido=e.idpartido set v.idenfrentamiento=null where p.codigo=:codigo");
+            $stmSet->bindParam(":codigo", $codigo,PDO::PARAM_STR);
+            $exito=$stmSet->execute()&& $stmSet->rowCount()>0;
+        } catch (Exception $ex) {
+            
+        }
+        return $exito;
+    }
+
 }

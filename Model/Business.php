@@ -5,7 +5,7 @@ class Business {
     public function getView($location) {
         $locations = ["Inicio", "InicioEstudiante", "Prueba", "Prueba2", "Practica",
             "InicioDocente", "Logout", "RondaUno", "PB", "RondaUnoDocente", "Grupos",
-            "PuntajeGrupo", "Enfrentamiento", "LoginE", "Diagnostico","PruebaSinConexion"];
+            "PuntajeGrupo", "Enfrentamiento", "LoginE", "Diagnostico", "PruebaSinConexion", "Avance"];
         $value = "";
         foreach ($locations as $locationn) {
             if (strcasecmp($location, $locationn) == 0) {
@@ -20,13 +20,15 @@ class Business {
     }
 
     public function getListaDiagnosticosProcesados() {
-           require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
-        return (new EstudianteDAO())->getListaDiagnosticosProcesados();     
+        require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
+        return (new EstudianteDAO())->getListaDiagnosticosProcesados();
     }
+
     public function getListaEstudiantesParticipantes($filter) {
         require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
         return (new EstudianteDAO())->getListaEstudiantesParticipantes($filter);
     }
+
     public function getListaEstudiantesNoParticipantes() {
         require_once RAIZ . 'Model/DAO/EstudianteDAO.php';
         return (new EstudianteDAO())->getListaEstudiantesNoParticipantes();
@@ -298,18 +300,18 @@ class Business {
     }
 
     public function validarEnDiagnostico() {
-        if(!isset($_SESSION)){
-             session_start(); 
-        }      
-        if (isset($_SESSION["infoEstudiante"])) {            
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+        if (isset($_SESSION["infoEstudiante"])) {
             require RAIZ . 'Model/DTO/EstudianteDTO.php';
-            require RAIZ . 'Model/DTO/DiagnosticoDTO.php';            
-            require RAIZ . 'Model/DAO/DiagnosticoDAO.php';            
+            require RAIZ . 'Model/DTO/DiagnosticoDTO.php';
+            require RAIZ . 'Model/DAO/DiagnosticoDAO.php';
             $diagnosticoDAO = new DiagnosticoDAO();
             $diagnosticoDTO = new DiagnosticoDTO(null, null, null, null);
             $diagnosticoDTO->setEstudianteDTO(new EstudianteDTO(($_SESSION["infoEstudiante"])["id"], null, null, null, null, null));
             if ($diagnosticoDAO->validarDiagnosticoOff($diagnosticoDTO) || ($diagnosticoDAO->validarEnDiagnostico($diagnosticoDTO) && $diagnosticoDAO->validarTiempoDiagnostico($diagnosticoDTO))) {
-                return true;                
+                return true;
             }
         }
         return false;
@@ -549,6 +551,28 @@ class Business {
         return (new PartidoDAO())->finalizarRonda($partidoDTO);
     }
 
+    public function ganadorEnfrentamiento(VersusDTO $versusDTO): bool {
+        require_once RAIZ . 'Model/DAO/VersusDAO.php';
+        $enfrentamiento = (new VersusDAO())->seleccionarGanador($versusDTO);
+        if (count($enfrentamiento) < 0) {
+            throw new Exception("Error al seleccionar ganador !");
+        }        
+        require_once RAIZ . 'Model/DTO/RegistroDTO.php';
+        $enfrentamientoDTO = new EnfrentamientoDTO($enfrentamiento["id"], new RegistroDTO($enfrentamiento["idregistro"], null, null, null), new PartidoDTO($enfrentamiento["idpartido"], null, null, null, null, null, null, null, null, null), $enfrentamiento["numero"], $enfrentamiento["ronda"], null, null);
+        $enfrentamientoDTO->pasarRonda();
+        require_once RAIZ . 'Model/DAO/EnfrentamientoDAO.php';
+        return (new EnfrentamientoDAO())->finalizarEnfrentamiento($enfrentamientoDTO);
+    }
+
+    public function deseleccionarEnfrentamiento($versusDTO) {
+        require_once RAIZ . 'Model/DAO/VersusDAO.php';
+        $versusDAO = (new VersusDAO());
+        if (!$versusDAO->validarVersusExiste()) {
+            throw new Exception("No hay enfrentamiento seleccionado.");
+        }
+        return $versusDAO->deseleccionarEnfrentamiento($versusDTO);
+    }
+    
     public function finalizarEnfrentamiento(PartidoDTO $partidoDTO) {
 
         require_once RAIZ . 'Model/DAO/VersusDAO.php';

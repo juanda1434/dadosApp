@@ -1,8 +1,8 @@
 var camposVersus = [[], []];
 var EstudiantesVersus = [[], []];
-var pmayor=0;
-var pun=[0,0];
-var actualizar=false;
+var pmayor = 0;
+var pun = [0, 0];
+var actualizar = false;
 function cargar() {
 
     let numeros = [];
@@ -245,28 +245,36 @@ function cargar() {
                                 break;
                         }
                     }
-                    
+
                 }
                 for (let i = 0; i < numeros.length; i++) {
-                    let d = numerosSeleccionados[i+1]==-1 ?0 :numerosSeleccionados[i+1];
-                    
+                    let d = numerosSeleccionados[i + 1] == -1 ? 0 : numerosSeleccionados[i + 1];
+
 //                    numeros[i].letra.letra = d;
                     numeros[i].letra.image(imgLetra[d]);
 
                 }
                 layer.batchDraw()
-                
+
                 let estudiante = EstudiantesVersus[0];
                 if (Object.keys(estudiante).length > 0) {
                     $("#lblNombre1").html(estudiante["nombre"]);
                     $("#lblSede1").html(estudiante["sede"]);
                     $("#lblGrupo1").html(estudiante["grupo"]);
                     $("#lblPuntaje1").html(estudiante["puntaje"]);
+                    $("#btnGanador1").html(`<button class="btn btn-primary"><i class="fas fa-crown"></i>Ganador
+    </button>`);
+                    $("#btnGanador1").off("click");
+                    $("#btnGanador1").on("click", () => {
+                        seleccionarGanador(estudiante["id"]);
+                    });
                 } else {
                     $("#lblNombre1").html("Selecciona enfrentamiento");
                     $("#lblSede1").html("Selecciona enfrentamiento");
                     $("#lblGrupo1").html("Selecciona enfrentamiento");
                     $("#lblPuntaje1").html("Selecciona enfrentamiento");
+                    $("#btnGanador1").off("click");
+                    $("#btnGanador1").html(``);
                 }
 
 
@@ -526,8 +534,8 @@ function cargar2() {
 
                 }
                 for (let i = 0; i < numeros.length; i++) {
-                    let d = numerosSeleccionados[i+1]==-1 ?0 :numerosSeleccionados[i+1];
-                    
+                    let d = numerosSeleccionados[i + 1] == -1 ? 0 : numerosSeleccionados[i + 1];
+
 //                    numeros[i].letra.letra = d;
                     numeros[i].letra.image(imgLetra[d]);
 
@@ -541,6 +549,12 @@ function cargar2() {
                     $("#lblPuntaje2").html(estudiante["puntaje"]);
                     $("#lblRonda").html(estudiante["ronda"])
                     $("#lblNumeroRonda").html(estudiante["numero"])
+                    $("#btnGanador2").html(`<button class="btn btn-primary"><i class="fas fa-crown"></i>Ganador
+    </button>`);
+                    $("#btnGanador2").off("click");
+                    $("#btnGanador2").on("click", () => {
+                        seleccionarGanador(estudiante["id"]);
+                    });
                 } else {
                     $("#lblNombre2").html("Selecciona enfrentamiento");
                     $("#lblSede2").html("Selecciona enfrentamiento");
@@ -548,6 +562,8 @@ function cargar2() {
                     $("#lblPuntaje2").html("Selecciona enfrentamiento");
                     $("#lblRonda").html("Esperando...");
                     $("#lblNumeroRonda").html("Esperando...");
+                    $("#btnGanador2").off("click");
+                    $("#btnGanador2").html(``);
                 }
 
 
@@ -585,7 +601,7 @@ $(() => {
     }
     function getEstudiantesVersus() {
         $.get("GET/EstudiantesVersus/codigo=" + readGet.codigo, (r) => {
-            pmayor=0;
+            pmayor = 0;
 //            console.log(r);
             if (r[0] != undefined && Object.keys(r[0]).length > 0) {
                 EstudiantesVersus[0] = r[0];
@@ -597,23 +613,23 @@ $(() => {
             } else {
                 EstudiantesVersus[1] = [];
             }
-            
+
             for (let key in EstudiantesVersus) {
-                let a=EstudiantesVersus[key];
-                for(let k in a){
-                    if (k=="puntaje") {                        
-                        pmayor= a[k]>pmayor?a[k]:pmayor;
-                        if (pun[key]!=a[k]) {
-                            actualizar=true;
-                            pun[key]=a[k];
+                let a = EstudiantesVersus[key];
+                for (let k in a) {
+                    if (k == "puntaje") {
+                        pmayor = a[k] > pmayor ? a[k] : pmayor;
+                        if (pun[key] != a[k]) {
+                            actualizar = true;
+                            pun[key] = a[k];
                         }
-                        
+
                     }
                 }
             }
-            if (pmayor>=2) {
+            if (pmayor >= 2) {
                 $("#btnFinalizarEnfrentamiento").removeClass("disabled");
-            }else{
+            } else {
                 $("#btnFinalizarEnfrentamiento").addClass("disabled");
             }
             setTimeout(() => {
@@ -631,4 +647,18 @@ $(() => {
 
 
 
-})
+});
+
+const seleccionarGanador = (idversus) => {
+    $.post("POST/GanadorEnfrentamiento", {codigo: readGet.codigo, id: idversus}, (r) => {
+        console.log(r);
+        if (r.exito != undefined && r.exito) {
+            actualizar = true;
+            $(document).Toasts('create', {
+                class: 'bg-success',
+                title: 'Correcto!',
+                body: 'Acabas seleccionar un ganador!'
+            });
+        }
+    }, "json");
+};

@@ -133,6 +133,7 @@ ${enfrentamientosFinal}</ul></div>`;
                                         title: 'Informativo !',
                                         body: 'Has seleccionado un enfrentamiento.<br>Puedes iniciar el 1 v 1.'
                                     });
+                                    actualizar=true;
                                 } else if (r.error != undefined) {
                                     $(document).Toasts('create', {
                                         class: 'bg-danger',

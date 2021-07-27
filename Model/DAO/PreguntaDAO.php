@@ -84,7 +84,7 @@ class PreguntaDAO {
         $idPartido = ($preguntaDTO->getPartidoDTO())->getIdPartido();
         $pregunta = [];
         try {
-            $stmGetPregunta = $this->conexion->prepare("select pr.idpregunta,pr.dadouno,pr.dadodos,pr.dadotres,pr.dadocuatro,pr.numero,pr.fecharegistro,date_add(pr.fecharegistro, INTERVAL (2*60) second)fechafinal from pregunta pr INNER JOIN partido p on p.idpartido=pr.idpartido INNER JOIN estadopregunta ep on ep.idestadopregunta=pr.idestadopregunta WHERE ep.descripcion='activa'  and p.idpartido=:idpartido and pr.activo");
+            $stmGetPregunta = $this->conexion->prepare("select pr.idpregunta,pr.dadouno,pr.dadodos,pr.dadotres,pr.dadocuatro,pr.numero,pr.fecharegistro,date_add(pr.fecharegistro, INTERVAL (50) second)fechafinal from pregunta pr INNER JOIN partido p on p.idpartido=pr.idpartido INNER JOIN estadopregunta ep on ep.idestadopregunta=pr.idestadopregunta WHERE ep.descripcion='activa'  and p.idpartido=:idpartido and pr.activo");
             $stmGetPregunta->bindParam(":idpartido", $idPartido, PDO::PARAM_INT);
             if ($stmGetPregunta->execute() && $stmGetPregunta->rowCount() > 0) {
                 $preguntaAux = $stmGetPregunta->fetch();

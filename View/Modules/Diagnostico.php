@@ -124,11 +124,11 @@ if (!isset($_SESSION["infoEstudiante"])) {
                                 <!-- /.login-logo -->
                                 <div id="banderaTabla" class="card">
                                     <div class="card-header text-center">
-                                        <h3 >Antes de <b>iniciar el juego</b> debes presentar la siguiente <b>prueba diagnóstica</b>.
+                                        <h3 >Antes de <b>iniciar el juego</b> debes presentar la siguiente <b>prueba avance</b>.
                                             <br><br>Realiza la prueba <b>sin ayuda de tus padres</b>, para que puedas evidenciar tus avances durante el juego.
                                             <br><br>Recuerda que esta prueba <b>no tiene calificación</b>.
                                         <br><br>Esta prueba tiene una duración máxima de <b>20 minutos</b>.
-                                        <br><br><b>Dar click en empezar prueba diagnóstica</b></h3>
+                                        <br><br><b>Dar click en empezar prueba avance</b></h3>
 
                                     </div>
                                     <div  class="card-body  pt-0 pb-0 pl-1 pr-2">       

@@ -9,6 +9,8 @@ Options ALL -Indexes
 #para poder utilizar rewriterule
 RewriteEngine on
 
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteRule ^ index.php [QSA,L]
 
 RewriteRule ^PUT/(\w+)$ index.php?put=put&&ubicacionput=$1
 RewriteRule ^POST/(\w+)$ index.php?post=post&ubicacionpost=$1
@@ -16,3 +18,4 @@ RewriteRule ^POST/(\w+)$ index.php?post=post&ubicacionpost=$1
 RewriteRule ^GET/(\w+)/codigo=(\w+)$ index.php?get=get&ubicacionget=$1&codigo=$2
 RewriteRule ^GET/(\w+)$ index.php?get=get&ubicacionget=$1
 RewriteRule ^(\w+)$ index.php?ubicacion=$1
+

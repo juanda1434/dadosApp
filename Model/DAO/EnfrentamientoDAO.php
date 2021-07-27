@@ -29,7 +29,7 @@ class EnfrentamientoDAO {
             if ($stmGetCuadros->execute() && $stmGetCuadros->rowCount() > 0) {
                 $enfrentamientos = $stmGetCuadros->fetchAll();
                 foreach ($enfrentamientos as $enfrentamiento) {
-                    $cuadros[] = ["idestudiante"=>$enfrentamiento["idestudiante"],"id" => $enfrentamiento["idenfrentamiento"], "nombre" => $enfrentamiento["nombre"], "ronda" => intval($enfrentamiento["ronda"]), "numero" => intval($enfrentamiento["numero"]), "puntaje" => intval($enfrentamiento["puntaje"])];
+                    $cuadros[] = ["idestudiante" => $enfrentamiento["idestudiante"], "id" => $enfrentamiento["idenfrentamiento"], "nombre" => $enfrentamiento["nombre"], "ronda" => intval($enfrentamiento["ronda"]), "numero" => intval($enfrentamiento["numero"]), "puntaje" => intval($enfrentamiento["puntaje"])];
                 }
             }
         } catch (Exception $ex) {
@@ -96,10 +96,14 @@ class EnfrentamientoDAO {
             if (!$stmLimpiarCampo->execute() || $stmLimpiarCampo->rowCount() < 0) {
                 throw new Exception("Error al finalizar enfrentamiento. Limpiar campo.");
             }
-            $stmSetPreguntas = $this->conexion->prepare("UPDATE pregunta p SET p.activo=false where p.idpartido=:idpartido and p.activo");
-            $stmSetPreguntas->bindParam(":idpartido", $idPartido, PDO::PARAM_INT);
-            if (!$stmSetPreguntas->execute() || $stmSetPreguntas->rowCount() < 1) {
-                throw new Exception("Error finalizar enfrentamiento. Cerrar pregunta");
+            $stmBuscarPreguntas = $this->conexion->prepare("select * from pregunta p where p.idpartido=:idpartido and p.activo");
+            $stmBuscarPreguntas->bindParam(":idpartido", $idPartido, PDO::PARAM_INT);
+            if ($stmBuscarPreguntas->execute() && $stmBuscarPreguntas->rowCount() > 0) {
+                $stmSetPreguntas = $this->conexion->prepare("UPDATE pregunta p SET p.activo=false where p.idpartido=:idpartido and p.activo");
+                $stmSetPreguntas->bindParam(":idpartido", $idPartido, PDO::PARAM_INT);
+                if (!$stmSetPreguntas->execute() || $stmSetPreguntas->rowCount() < 1) {
+                    throw new Exception("Error finalizar enfrentamiento. Cerrar pregunta");
+                }
             }
             $stmSetEnfrentamiento = $this->conexion->prepare("insert into enfrentamiento (idregistro,idpartido,numero,ronda) values(:idregistro,:idpartido,:numero,:ronda)");
             $stmSetEnfrentamiento->bindParam(":idregistro", $idRegistro, PDO::PARAM_INT);
@@ -160,7 +164,5 @@ class EnfrentamientoDAO {
         }
         return $exito;
     }
-
-    
 
 }

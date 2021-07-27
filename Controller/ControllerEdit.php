@@ -91,15 +91,15 @@ class ControllerEdit {
         return (new Business())->actualizarEstado();
     }
 
-    public function enviarRespuestaDiagnostico(int $numeroUno, int $numeroDos, int $numeroTres, int $numeroCuatro, string $respuesta) :bool{
+    public function enviarRespuestaDiagnostico(int $numeroUno, int $numeroDos, int $numeroTres, int $numeroCuatro, string $respuesta): bool {
         require_once RAIZ . 'Model/Business.php';
         require_once RAIZ . 'Model/DTO/DiagnosticoDTO.php';
         require_once RAIZ . 'Model/DTO/EstudianteDTO.php';
         require_once RAIZ . 'Model/DTO/DiagnosticoPreguntaDTO.php';
         require_once RAIZ . 'Model/DTO/PreguntaBaseDTO.php';
-        $diagnosticoDTO= new DiagnosticoDTO(null, null, null,null);
+        $diagnosticoDTO = new DiagnosticoDTO(null, null, null, null);
         $preguntaBaseDTO = new PreguntaBaseDTO(null, $numeroUno, $numeroDos, $numeroTres, $numeroCuatro, null);
-        $diagnosticoPreguntaDTO=new DiagnosticoPreguntaDTO(null, null, $preguntaBaseDTO, null, null, null);
+        $diagnosticoPreguntaDTO = new DiagnosticoPreguntaDTO(null, null, $preguntaBaseDTO, null, null, null);
         $diagnosticoPreguntaDTO->setRespuesta($respuesta);
         $diagnosticoPreguntaDTO->setDiagnosticoDTO($diagnosticoDTO);
         $diagnosticoDTO->agregarDiagnosticoPreguntaDTO($diagnosticoPreguntaDTO);
@@ -107,7 +107,27 @@ class ControllerEdit {
         return false;
     }
 
-    public function iniciarDiagnostico() :bool{        
+    public function iniciarDiagnostico(): bool {
         return (new Business())->empezarDiagnostico();
     }
+
+    public function ganadorEnfrentamiento($codigo, $idVersus): bool {
+        require_once RAIZ . 'Model/Business.php';
+        require_once RAIZ . 'Model/DTO/DiagnosticoDTO.php';
+        require_once RAIZ . 'Model/DTO/EnfrentamientoDTO.php';
+        require_once RAIZ . 'Model/DTO/VersusDTO.php';
+        require_once RAIZ . 'Model/DTO/PartidoDTO.php';
+        return (new Business())->ganadorEnfrentamiento(new VersusDTO($idVersus, new EnfrentamientoDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null)));
+    }
+
+    public function deseleccionarEnfrentamiento($codigo) {
+        require_once RAIZ . 'Model/Business.php';
+        require_once RAIZ . 'Model/DTO/EnfrentamientoDTO.php';
+        require_once RAIZ . 'Model/DTO/VersusDTO.php';
+        require_once RAIZ . 'Model/DTO/PartidoDTO.php';
+        return (new Business())->deseleccionarEnfrentamiento(new VersusDTO(null, new EnfrentamientoDTO(null, null, new PartidoDTO(null, $codigo, null, null, null, null, null, null, null, null), null, null, null, null)));
+    
+        
+    }
+
 }

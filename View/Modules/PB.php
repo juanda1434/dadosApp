@@ -77,6 +77,8 @@
                         <!-- Left navbar links -->
                         <ul class="navbar-nav">
                             <li class="nav-item">
+<!--                                <button class="btn btn-primary"><i class="fas fa-crown"></i>Ganador
+    </button>-->
                                 <a href="Grupos" class="nav-link">Volver</a>
                             </li>
 
@@ -102,7 +104,7 @@
                                 <div class="card ">
                                     <div class="card-header text-center ">
                                         <h2><b id="lblNombre1">Nombre niño</b> </h2>
-
+                                        <div id="btnGanador1"></div>
                                     </div>
                                     <div  class="card-body login-card-body">       
 
@@ -166,7 +168,7 @@
                                 <div class="card ">
                                     <div class="card-header text-center ">
                                         <h2><b id="lblNombre2">Nombre niño</b> </h2>
-
+                                        <div id="btnGanador2"></div>
                                     </div>
                                     <div  class="card-body login-card-body">       
 
@@ -278,7 +280,9 @@
                                             <div class="col-6 mt-3 row justify-content-center">
                                                 <button id="btnSaltarPartida" type="button" class="btn btn-info btn-flat disabled"><i class="fas fa-paper-plane "></i> Saltar numero</button>
                                             </div>
-
+<div class="col-6 mt-3 row justify-content-center">
+                                                <button id="btnDeseleccionar" type="button" class="btn btn-info btn-flat disabled mr-1"><i class="fas fa-paper-plane "></i> Deseleccionar enfrentamiento</button>
+                                            </div>
                                             <div class="col-6 mt-3 row justify-content-center">
                                                 <button id="btnFinalizarEnfrentamiento" type="button" class="btn btn-info btn-flat disabled"><i class="fas fa-paper-plane "></i> Finalizar Enfrentamiento</button>
                                             </div>
@@ -344,6 +348,23 @@
 
             </div>
 
+            <div class="modal fade" id="modal-success">
+        <div class="modal-dialog">
+            <div class="modal-content bg-success " style="min-width: 600px; min-height: 250px">
+            <div class="modal-header text-center" style="display: inline-block">
+                <h1 class="modal-title  text-center" >Ganador de la ronda<span id=""></span> </h1>
+              
+            </div>
+            <div class="modal-body text-center">
+                <h1 class="pt-5" id="lblTituloGanar"></h1>
+            </div>
+            
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+            
 
             <footer class="main-footer bg-navy">
                 <!-- To the right -->
@@ -424,19 +445,51 @@
                         app.estaRuleta = true;
                     }
                 });
+                
+                $("#btnDeseleccionar").on("click", (e) => {
+                    if (!app.estaRuleta && numeroElegido == -1 && app.enjuego) {
+                        $.post("POST/DeseleccionarEnfrentamiento",{codigo:app.codigoSala},(r)=>{
+                 console.log(r);           
+                if(r.exito!=undefined && r.exito){
+                               
+                             $(document).Toasts('create', {
+                                        class: 'bg-success',
+                                        title: 'Informativo!',
+                                        body: 'Has deseleccionado un enfrentamiento!'
+                                    });
+                            }else if(r.error!=undefined){
+                                 $(document).Toasts('create', {
+                                        class: 'bg-warning',
+                                        title: 'Informativo!',
+                                        body: r.error
+                                    });
+                            }
+                        },"json");
+                    }
+                });
 
                 $("#btnFinalizarEnfrentamiento").on("click", (e) => {
-
+                    const ganadores = [...EstudiantesVersus];
+                    
                     if (!app.estaRuleta && numeroElegido == -1 && app.enjuego) {
                         activeButton($("#btnIniciarRuleta"), false);
                         $.post("POST/FinalizarEnfrentamiento", {codigo: app.codigoSala}, (r) => {
                             console.log(r);
                             if (r.exito != undefined && r.exito) {
-                                $(document).Toasts('create', {
-                                        class: 'bg-success',
-                                        title: 'Informativo!',
-                                        body: 'Has finalizado el enfrentamiento.'
-                                    });
+                                if(ganadores[0].puntaje>ganadores[1].puntaje){
+                                   $("#lblTituloGanar").html(ganadores[0].nombre);
+                                }else{
+                                    $("#lblTituloGanar").html(ganadores[1].nombre);
+                                }
+                                
+                                 $('#modal-success').modal({
+  keyboard: false
+});
+//                                $(document).Toasts('create', {
+//                                        class: 'bg-success',
+//                                        title: 'Informativo!',
+//                                        body: 'Has finalizado el enfrentamiento.'
+//                                    });
                                     cuadro(readGet.codigo);
                             }else if(r.error !=undefined){
                                  $(document).Toasts('create', {
@@ -559,7 +612,6 @@
 
                 function getEstadoPartido() {
                     $.get("GET/PartidoActivoEnfrentamiento/codigo=" + app.codigoSala, (r) => {
-                        console.log(r);
                         if (r.exito != undefined && !r.exito) {
                             if (app.codigoSala != "") {
 
@@ -626,6 +678,7 @@
                                 llenarDados();
                                 debesLlegar();
                                 getEstadoPartido();
+                                cuadro(readGet.codigo)
                             }
                             r(actu1());
                         }, 2000);
