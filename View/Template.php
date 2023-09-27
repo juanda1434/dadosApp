@@ -12,13 +12,10 @@ if (isset($_GET["put"]) && $_GET["put"]=="put" && isset($_GET["ubicacionput"])) 
     include_once RAIZ.'View/Method/PUT/PUT.php';
     return;
 }
-?>
 
     
-    <?php
+include_once RAIZ . '/View/Modules/' . (new ControllerView())->getView(isset($_GET["ubicacion"]) ? $_GET["ubicacion"] : "Inicio");
     
-    include_once RAIZ . '/View/Modules/' . (new ControllerView())->getView(isset($_GET["ubicacion"]) ? $_GET["ubicacion"] : "Inicio");
     
-    ?>
 
    

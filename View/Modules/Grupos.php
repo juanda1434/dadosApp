@@ -177,8 +177,9 @@
                                                 <a href="#"  id="btnExcelParticipantePractica3" class="btn btn-success col-4 col-lg-2 mr-1 mb-1" value="3"><li class="fas fa-save"> </li> Miercoles</a>
                                                 <a href="#"  id="btnExcelParticipantePractica4" class="btn btn-success col-3 col-lg-1 mr-1 mb-1" value="4"><li class="fas fa-save"> </li> Jueves</a>
                                                 <a href="#"  id="btnExcelParticipantePractica5" class="btn btn-success col-4 col-lg-1 mr-1 mb-1" value="5"><li class="fas fa-save"> </li> Viernes</a>
-                                                <a href="#"  id="btnExcelParticipantePractica6" class="btn btn-success col-4 col-lg-1 mr-1" value="6"><li class="fas fa-save"> </li> Sabado</a>
-                                                <a href="#"  id="btnExcelParticipantePractica7" class="btn btn-success col-4 col-lg-2 " value="7"><li class="fas fa-save"> </li> Domingo</a>
+                                                <a href="#"  id="btnExcelParticipantePractica6" class="btn btn-success col-4 col-lg-1 mr-1 mb-1" value="6"><li class="fas fa-save"> </li> Sabado</a>
+                                                <a href="#"  id="btnExcelParticipantePractica7" class="btn btn-success col-4 col-lg-2 mr-1" value="7"><li class="fas fa-save"> </li> Domingo</a>
+                                                <button   id="btnHabilitar" class="btn btn-success col-4 col-lg-2 "><li class="fas fa-save"> </li> HABILITAR REGISTRO</button>
                                             </div>
                                        
                                         
@@ -347,7 +348,39 @@ const generarExcelDiagnosticosProcesados = () => {
 
 
             $(() => {
+                document.getElementById("btnHabilitar").onclick = async ()=>{
+                    let exito = false;
+                    $.post({
+                        url: "POST/Habilitar",
+                        data: {},
+                        success: (r) => {
+                            console.log(r);
+                            if (r.exito != undefined && r.exito) {
+                                exito = [true,r.message];
+                            }else{
+                                exito=  [false,r.error];
+                            }
 
+                            if(exito[0]){
+                
+                $(document).Toasts('create', {
+                                class: 'bg-success',
+                                title: 'Informativo !',
+                                body: exito[1]
+                            });
+                }else{
+                     $(document).Toasts('create', {
+                                class: 'bg-danger',
+                                title: 'Informativo !',
+                                body: exito[1]
+                            });
+                } 
+                        }, async: false,
+                        dataType: "json"
+                    
+                    });
+               
+                };
                 document.getElementById("btnExcelParticipantePractica").onclick= (e)=>{generarExcelParticipantesPractica(e)};
                 document.getElementById("btnExcelParticipantePractica1").onclick= (e)=>{generarExcelParticipantesPractica(e)};
                 document.getElementById("btnExcelParticipantePractica2").onclick= (e)=>{generarExcelParticipantesPractica(e)};

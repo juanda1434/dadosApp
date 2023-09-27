@@ -5,7 +5,7 @@ class Business {
     public function getView($location) {
         $locations = ["Inicio", "InicioEstudiante", "Prueba", "Prueba2", "Practica",
             "InicioDocente", "Logout", "RondaUno", "PB", "RondaUnoDocente", "Grupos",
-            "PuntajeGrupo", "Enfrentamiento", "LoginE", "Diagnostico", "PruebaSinConexion", "Avance"];
+            "PuntajeGrupo", "Enfrentamiento", "LoginE", "Diagnostico", "PruebaSinConexion", "Avance","Registro"];
         $value = "";
         foreach ($locations as $locationn) {
             if (strcasecmp($location, $locationn) == 0) {

@@ -38,3 +38,25 @@ export function unirsePartida(codigo) {
 
     return exito;
 }
+
+export function registroEs(name,code,pass,sede){
+    let exito = false;
+
+
+    $.post({
+        url: "POST/RegistroEstudiante",
+        data: {name,code,pass,sede},
+        success: (r) => {
+            console.log(r);
+            if (r.exito != undefined && r.exito) {
+                exito = [true];
+            }else{
+                exito=  [false,r.error];
+            }
+        }, async: false,
+        dataType: "json"
+
+    });
+
+    return exito;
+}

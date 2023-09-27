@@ -9,7 +9,7 @@ function POST($ubicacion){
         "BorrarPartido","NuevaRonda","FinalizarRonda","PuntoSede","SeleccionarEnfrentamiento",
         "RegistrarPreguntaEnfrentamiento","EnviarSigno","FinalizarEnfrentamiento","ResponderEnfrentamiento",
         "ActualizarEstado","IniciarDiagnostico","RespuestaDiagnostico","GanadorEnfrentamiento",
-        "DeseleccionarEnfrentamiento"];    
+        "DeseleccionarEnfrentamiento","RegistroEstudiante","Habilitar"];    
     $r="";
     foreach ($ubicaciones as $ubica) {
         if ($ubica==$ubicacion) {
